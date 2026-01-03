@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt" // Agregado
+	"fmt"
 	"html/template"
 	"io"
 	"os"
@@ -18,33 +18,20 @@ type Post struct {
 	Author      string `yaml:"author"`
 	Body        string `yaml:"body"`
 	Description string `yaml:"description"`
-	Link        string // Campo extra para el índice
+	Link        string 
 }
 
+// Función para copiar archivos
 func copyAssets(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
+		if err != nil { return err }
 		relPath, _ := filepath.Rel(src, path)
 		targetPath := filepath.Join(dst, relPath)
-
-		if info.IsDir() {
-			return os.MkdirAll(targetPath, info.Mode())
-		}
-
-		srcFile, err := os.Open(path)
-		if err != nil {
-			return err
-		}
+		if info.IsDir() { return os.MkdirAll(targetPath, info.Mode()) }
+		srcFile, _ := os.Open(path)
 		defer srcFile.Close()
-
-		dstFile, err := os.Create(targetPath)
-		if err != nil {
-			return err
-		}
+		dstFile, _ := os.Create(targetPath)
 		defer dstFile.Close()
-
 		_, err = io.Copy(dstFile, srcFile)
 		return err
 	})
@@ -58,15 +45,15 @@ func slugify(s string) string {
 }
 
 func main() {
+	// 1. Leer el config.yaml y sacar el BaseURL
+	configRaw, _ := os.ReadFile("config.yaml")
+	var config map[string]string
+	yaml.Unmarshal(configRaw, &config)
+	baseUrl := config["base_url"]
+
 	files, _ := os.ReadDir("content")
-
 	os.MkdirAll("public", 0755)
-
-	// Copiar los assets
-	err := copyAssets("assets", "public/assets")
-	if err != nil {
-		fmt.Println("Error copiando assets:", err)
-	} // <-- ESTA LLAVE FALTABA
+	copyAssets("assets", "public/assets")
 
 	var allPosts []Post
 
@@ -76,27 +63,32 @@ func main() {
 			var post Post
 			yaml.Unmarshal(content, &post)
 
-			var nameBase string
 			if post.Title != "" {
-				nameBase = slugify(post.Title) + ".html"
+				post.Link = slugify(post.Title) + ".html"
 			} else {
-				nameBase = strings.TrimSuffix(file.Name(), ".yaml") + ".html"
+				post.Link = strings.TrimSuffix(file.Name(), ".yaml") + ".html"
 			}
-
-			post.Link = nameBase 
 			allPosts = append(allPosts, post)
 
+			// 2. Renderizar Post pasando un mapa simple
 			tmplPost := template.Must(template.ParseFiles("templates/post.html"))
 			outFile, _ := os.Create(filepath.Join("public", post.Link))
-			tmplPost.Execute(outFile, post)
+			tmplPost.Execute(outFile, map[string]any{
+				"BaseURL": baseUrl,
+				"Post":    post,
+			})
 			outFile.Close()
 		}
 	}
 
+	// 3. Renderizar Index pasando un mapa simple
 	tmplIndex := template.Must(template.ParseFiles("templates/index.html"))
 	indexFile, _ := os.Create(filepath.Join("public", "index.html"))
-	tmplIndex.Execute(indexFile, allPosts)
+	tmplIndex.Execute(indexFile, map[string]any{
+		"BaseURL": baseUrl,
+		"Posts":   allPosts,
+	})
 	indexFile.Close()
-    
-    fmt.Println("🚀 Blog generado con éxito en /public")
+
+	fmt.Println("🚀 Blog generado con BaseURL:", baseUrl)
 }
