@@ -12,8 +12,6 @@
 
 **Yamblg** (leído como *"I am blog"*) es un repositorio plantilla diseñado para quienes quieren un blog personal profesional en tiempo récord, sin configurar motores pesados. La idea es simple: haces un fork, modificas el YAML y ya tienes tu blog.
 
----
-
 ## 🚀 ¿Qué es Yamblg?
 Es un **Starter Template** minimalista. No es un software que se instala, sino un punto de partida para tu identidad digital. El nombre juega con la fonética "I am blog" y la **"g"** final rinde tributo a **Go**, el lenguaje que procesa tu sitio con velocidad instantánea.
 
@@ -30,7 +28,6 @@ Yamblg utiliza una arquitectura de sitio estático (SSG) de bajo consumo:
 * **Go como Procesador:** El binario de Go toma tus archivos YAML y los transforma en HTML puro usando plantillas optimizadas.
 * **Automatización Total:** Gracias a GitHub Actions, cada vez que editas un archivo desde la web o subes un cambio, el blog se reconstruye y se despliega solo.
 
----
 
-Desarrollado para la simplicidad. 
+Desarrollado para la simplicidad. Desarollado para la comunidad. 💖
 **¡Go publish!**
