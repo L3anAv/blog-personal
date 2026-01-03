@@ -1,8 +1,76 @@
-<h1>Mi Blog Personal</h1>
-<ul>
-    {{ range . }}
-    <li>
-        <a href="{{ .Link }}">{{ .Title }}</a> - {{ .Description }}
-    </li>
-    {{ end }}
-</ul>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamblg | Crea tu blog rápidamente</title>
+    
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="/assets/style.css"> 
+        <style>
+            *{
+            font-family:Verdana, sans-serif;
+            }
+            /* Color del enlace cuando NO ha sido visitado */
+        
+        .titulo{
+            color:#0663e9;
+        }
+
+        /* Color del enlace cuando YA ha sido visitado */
+        .titulo:visited {
+        color: #0663e9; /* Cambia aquí al color que desees */
+        }
+
+        /* Color cuando pasas el ratón por encima */
+        .titulo:hover {
+        color: black;
+        }
+
+        .link:link {
+        color: black;
+        }
+
+        .link:visited {
+        color: #f99c16; /* Cambia aquí al color que desees */
+        }
+
+        .link:hover {
+        color: black;
+        }
+
+        </style>
+</head>
+<body style="display:flex; flex-direction:column; align-items: center; justify-items:center; ">
+    <div style="display:flex; flex-direction:row; ">
+        <img style="margin-left:10%; width:20%;" src="/assets/yamblg-logo.png" />
+        <header>
+            <h1 style="margin-left:10px;">Bienvenidx a <span style="font-size:40px;">Yamblg</span></h1>
+            <p style="margin-left:20px;" >Demo generada para ver el blog basico (Go + YAML)</p>
+        </header>
+    </div>
+
+    <main style="margin-top:30px; width:50%;" >
+        <ul style="list-style: none; display:flex; flex-direction:row; padding: 0; margin: 0;">
+            {{ range . }}
+            <li style="all: unset; width:100%; border: 0.5px dashed #000; padding:20px; margin:10px;">
+                <a class="titulo" stlye="all: unset;"  href="/{{ .Link }}">
+                    <h2 style="all: unset; font-size:20px;">{{ .Title }}</h2>
+                </a>
+                <p style="margin-bottom:10px; font-size:16px;">{{ .Description }}</p>
+                <a class="link" stlye="all: unset; color: inherit;"  href="/{{ .Link }}">
+                    <h3 style="all: unset; font-size:12px;"> Ir al posteo -></h2>
+                </a>
+                <small style="display:flex; justify-content: center; margin-top: 12px; line-height: 1; font-size:13px;">Publicado por {{ .Author }} el {{ .Date }}</small>
+            </li>
+            {{ end }}
+        </ul>
+    </main>
+<br>
+    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #1a1a1a; color: white; z-index: 1000;">
+        <p>© 2026 - Hecho con ❤️ y Go</p>
+    </footer>
+</body>
+</html>

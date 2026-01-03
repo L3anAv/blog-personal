@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/logo.png" alt="Yamblg Logo" width="350">
+  <img src="logo.png" alt="Yamblg Logo" width="350">
 </p>
 
 **Yamblg** (leído como *"I am blog"*) es un repositorio plantilla diseñado para quienes quieren un blog personal profesional en tiempo récord, sin configurar motores pesados. La idea es simple: haces un fork, modificas el YAML y ya tienes tu blog.

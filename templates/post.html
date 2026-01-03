@@ -4,12 +4,36 @@
     <meta charset="UTF-8">
     <title>{{ .Title }}</title>
     <style>body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; }</style>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+     <style>
+        *{
+          font-family:Verdana, sans-serif;
+        }
+        .datos{
+            font-size:12px;
+        }
+        .texto{
+            font-size:15px;
+        }
+        .link{
+            color:#0663e9;
+        }
+
+        /* Color del enlace cuando YA ha sido visitado */
+        .link:visited {
+        color: #0663e9; /* Cambia aquí al color que desees */
+        }
+
+        .link:hover {
+        color: #f99c16; 
+        }
+    </style>
 </head>
 <body>
-    <a href="index.html">← Volver</a>
-    <h1>{{ .Title }}</h1>
-    <p><em>Por {{ .Author }} - {{ .Date }}</em></p>
+    <a class="link" href="index.html">← Volver</a>
+    <h1 style="color:#0663e9;">{{ .Title }}</h1>
+    <p class="datos"><em>Por {{ .Author }} - {{ .Date }}</em></p>
     <hr>
-    <div>{{ .Body }}</div>
+    <p class="texto">{{ .Body }}</p>
 </body>
 </html>
