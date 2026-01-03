@@ -1,8 +1,15 @@
-name: Deploy Blog
+name: Mi Workflow en Construccion
 
 on:
-  push:
-    branches: ["master"] # Se ejecuta cada vez que subes algo a la rama main
+  workflow_dispatch: #
+
+###
+# name: Deploy Blog
+
+# on:
+#  push:
+#    branches: ["master"] # Se ejecuta cada vez que subes algo a la rama main
+###
 
 permissions:
   contents: read
