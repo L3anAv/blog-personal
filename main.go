@@ -14,7 +14,7 @@ type Post struct {
 	Date        string `yaml:"date"`
 	Author      string `yaml:"author"`
 	Body        string `yaml:"body"`
-	description string `yaml:"description"`
+	Description string `yaml:"description"`
 	Link        string // Campo extra para el índice
 }
 
