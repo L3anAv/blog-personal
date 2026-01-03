@@ -54,13 +54,13 @@
 
     <main style="margin-top:30px; width:50%;" >
         <ul style="list-style: none; display:flex; flex-direction:row; padding: 0; margin: 0;">
-            {{ range . }}
+            {{ range .Posts }}
             <li style="all: unset; width:100%; border: 0.5px dashed #000; padding:20px; margin:10px;">
                 <a class="titulo" stlye="all: unset;"  href="/{{ .Link }}">
                     <h2 style="all: unset; font-size:20px;">{{ .Title }}</h2>
                 </a>
                 <p style="margin-bottom:10px; font-size:16px;">{{ .Description }}</p>
-                <a class="link" stlye="all: unset; color: inherit;"  href="/{{ .Link }}">
+                <a class="link" stlye="all: unset; color: inherit;"  href="{{ $.BaseURL }}/{{ .Link }}">
                     <h3 style="all: unset; font-size:12px;"> Ir al posteo -></h2>
                 </a>
                 <small style="display:flex; justify-content: center; margin-top: 12px; line-height: 1; font-size:13px;">Publicado por {{ .Author }} el {{ .Date }}</small>

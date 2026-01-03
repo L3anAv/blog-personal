@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{{ .Title }}</title>
+    <title>{{ .Post.Title }}</title>
     <style>body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; line-height: 1.6; }</style>
     <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
      <style>
@@ -30,10 +30,10 @@
     </style>
 </head>
 <body>
-    <a class="link" href="index.html">← Volver</a>
-    <h1 style="color:#0663e9;">{{ .Title }}</h1>
-    <p class="datos"><em>Por {{ .Author }} - {{ .Date }}</em></p>
+    <a class="link" href="{{ .BaseURL }}/index.html">← Volver</a>
+    <h1 style="color:#0663e9;">{{ .Post.Title }}</h1>
+    <p class="datos"><em>Por {{ .Post.Author }} - {{ .Post.Date }}</em></p>
     <hr>
-    <p class="texto">{{ .Body }}</p>
+    <p class="texto">{{ .Post.Body }}</p>
 </body>
 </html>
