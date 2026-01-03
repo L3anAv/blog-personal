@@ -1,0 +1,8 @@
+<h1>Mi Blog Personal</h1>
+<ul>
+    {{ range . }}
+    <li>
+        <a href="{{ .Link }}">{{ .Title }}</a> - {{ .Date }}
+    </li>
+    {{ end }}
+</ul>

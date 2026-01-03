@@ -1,0 +1,4 @@
+title: "Hola desde YAML 2"
+date: "Hoy 2"
+author: "Matias Avila"
+body: "Este contenido fue insertado dinámicamente usando Go por segunda vez."

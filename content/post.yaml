@@ -1,0 +1,4 @@
+title: "Hola desde YAML"
+date: "Hoy"
+author: "Tu Nombre"
+body: "Este contenido fue insertado dinámicamente usando Go."
