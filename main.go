@@ -5,15 +5,17 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
 	"gopkg.in/yaml.v3"
 )
 
 type Post struct {
-	Title  string `yaml:"title"`
-	Date   string `yaml:"date"`
-	Author string `yaml:"author"`
-	Body   string `yaml:"body"`
-	Link   string // Campo extra para el índice
+	Title       string `yaml:"title"`
+	Date        string `yaml:"date"`
+	Author      string `yaml:"author"`
+	Body        string `yaml:"body"`
+	description string `yaml:"description"`
+	Link        string // Campo extra para el índice
 }
 
 // Principal
