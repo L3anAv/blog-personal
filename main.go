@@ -16,6 +16,7 @@ type Post struct {
 	Link   string // Campo extra para el índice
 }
 
+// Principal
 func main() {
 	files, _ := os.ReadDir("content")
 	os.MkdirAll("public", 0755)
