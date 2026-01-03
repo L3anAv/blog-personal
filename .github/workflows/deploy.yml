@@ -2,7 +2,7 @@ name: Deploy Blog
 
 on:
   push:
-    branches: ["main"] # Se ejecuta cada vez que subes algo a la rama main
+    branches: ["master"] # Se ejecuta cada vez que subes algo a la rama main
 
 permissions:
   contents: read
