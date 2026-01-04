@@ -9,7 +9,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 ![Made with Go](https://img.shields.io/badge/Made%20with-Go-00ADD8?logo=go)
 ![Configured with YAML](https://img.shields.io/badge/Config-YAML-CB171E?logo=yaml&logoColor=white)
-![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+![Version](https://img.shields.io/badge/Version-0.0.20-blue)
 
 
 ## 🚀 ¿Qué es Yamblg?
