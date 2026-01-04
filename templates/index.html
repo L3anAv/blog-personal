@@ -40,12 +40,21 @@
         .link:hover {
         color: black;
         }
+        .contenedor-banner{
+            display:flex; 
+            flex-direction:row;
+        }
 
+        @media screen and (max-width: 915px) {
+            .contenedor-banner{
+            flex-direction:column;
+        }
+        }
         </style>
 </head>
 <body style="display:flex; flex-direction:column; align-items: center; justify-items:center; ">
-    <div style="display:flex; flex-direction:row; ">
-        <img style="margin-left:10%; width:20%;" src="./assets/yamblg-logo.png" />
+    <div class="contenedor-banner">
+        <img style="margin-left:10%; width: clamp(10%, 20%, 40%); height: auto;" src="./assets/yamblg-logo.png" />
         <header>
             <h1 style="margin-left:10px;">Bienvenidx a <span style="font-size:40px;">Yamblg</span></h1>
             <p style="margin-left:20px;" >Demo generada para ver el blog basico (Go + YAML)</p>
@@ -55,7 +64,7 @@
     <main style="margin-top:30px; width:50%;" >
         <ul style="list-style: none; display:flex; flex-direction:column; padding: 0; margin-bottom: 60px;">
             {{ range .Posts }}
-            <li style="all: unset; width:100%; border: 0.5px dashed #000; padding:20px; margin:10px;">
+            <li style="all: unset; width:100%; border: 0.5px dashed #000; padding:20px; margin-top:10px; margin-bottom:10px;">
                 <a class="titulo" stlye="all: unset;"  href="{{ $.BaseURL }}/{{ .Link }}">
                     <h2 style="all: unset; font-size:20px;">{{ .Title }}</h2>
                 </a>
