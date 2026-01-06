@@ -18,10 +18,11 @@ type Post struct {
 	Author      string `yaml:"author"`
 	Body        string `yaml:"body"`
 	Description string `yaml:"description"`
-	Link        string 
+	Fijado      bool   `yaml:"fijado"` // Lee la propiedad del YAML
+	Link        string
 }
 
-// Función para copiar archivos
+// Función para copiar archivos (assets)
 func copyAssets(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil { return err }
@@ -45,7 +46,8 @@ func slugify(s string) string {
 }
 
 func main() {
-	// 1. Leer el config.yaml y sacar el BaseURL
+	
+	// 1. Configuración inicial
 	configRaw, _ := os.ReadFile("config.yaml")
 	var config map[string]string
 	yaml.Unmarshal(configRaw, &config)
@@ -57,20 +59,24 @@ func main() {
 
 	var allPosts []Post
 
+	// 2. Procesar archivos YAML
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".yaml" {
 			content, _ := os.ReadFile(filepath.Join("content", file.Name()))
 			var post Post
 			yaml.Unmarshal(content, &post)
 
+			// Generar link basado en título o nombre de archivo
 			if post.Title != "" {
 				post.Link = slugify(post.Title) + ".html"
 			} else {
 				post.Link = strings.TrimSuffix(file.Name(), ".yaml") + ".html"
 			}
+
+			// Guardamos todos los posts en un único array
 			allPosts = append(allPosts, post)
 
-			// 2. Renderizar Post pasando un mapa simple
+			// Renderizar la página individual del Post
 			tmplPost := template.Must(template.ParseFiles("templates/post.html"))
 			outFile, _ := os.Create(filepath.Join("public", post.Link))
 			tmplPost.Execute(outFile, map[string]any{
@@ -81,14 +87,33 @@ func main() {
 		}
 	}
 
-	// 3. Renderizar Index pasando un mapa simple
-	tmplIndex := template.Must(template.ParseFiles("templates/index.html"))
-	indexFile, _ := os.Create(filepath.Join("public", "index.html"))
-	tmplIndex.Execute(indexFile, map[string]any{
-		"BaseURL": baseUrl,
-		"Posts":   allPosts,
-	})
-	indexFile.Close()
+	limite := 5
+	if len(allPosts) < 5 {
+		limite = len(allPosts)
+	}
 
-	fmt.Println("🚀 Blog generado con BaseURL:", baseUrl)
+	// 3. Renderizar Index pasándole el array completo
+	// El filtrado (fijado: true/false) se hace en el HTML con {{ if .Fijado }}
+	renderConLayout := func(outputFile string, contentTemplate string, data any) {
+    // Cargamos el layout Y la página de contenido específica
+    tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/"+contentTemplate))
+    f, _ := os.Create(filepath.Join("public", outputFile))
+    defer f.Close()
+    
+    // IMPORTANTE: Ejecutamos "base" que está definido en layout.html
+			tmpl.ExecuteTemplate(f, "base", data)
+	}
+
+	data := map[string]any{
+			"BaseURL": baseUrl,
+			"Posts":   allPosts,
+			"Latest":  allPosts[:limite],
+	}
+
+	// Renderizamos ambas páginas usando el mismo layout
+	renderConLayout("index.html", "index.html", data)
+	renderConLayout("lista-de-posteos.html", "lista-de-posteos.html", data)
+
+	fmt.Println("🚀 Blog generado con éxito")
+	fmt.Printf("Total de posts procesados: %d\n", len(allPosts))
 }

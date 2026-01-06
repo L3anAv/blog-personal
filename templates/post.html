@@ -8,6 +8,7 @@
      <style>
         *{
           font-family:Verdana, sans-serif;
+          background-color: #ebeaef;
         }
         .datos{
             font-size:12px;
@@ -17,6 +18,7 @@
         }
         .link{
             color:#0663e9;
+            margin-bottom:20px;
         }
 
         /* Color del enlace cuando YA ha sido visitado */
@@ -31,9 +33,11 @@
 </head>
 <body>
     <a class="link" href="{{ .BaseURL }}/index.html">← Volver</a>
+    <div style="border: 1px solid #000; padding:12px;">
     <h1 style="color:#0663e9;">{{ .Post.Title }}</h1>
     <p class="datos"><em>Por {{ .Post.Author }} - {{ .Post.Date }}</em></p>
-    <hr>
+    <br>
     <p class="texto">{{ .Post.Body }}</p>
+    </div>
 </body>
 </html>

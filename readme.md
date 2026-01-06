@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" alt="Yamblg Logo" width="350">
+  <img src="logo.png" alt="Yamblg Logo" width="max-content">
 </p>
 
 **Yamblg** (leído como *"I am blog"*) es un repositorio plantilla diseñado para quienes quieren un blog personal profesional en tiempo récord, sin configurar motores pesados. La idea es simple: haces un fork, modificas el YAML y ya tienes tu blog.
@@ -7,9 +7,9 @@
 <br>
 
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
-![Made with Go](https://img.shields.io/badge/Made%20with-Go-00ADD8?logo=go)
+![Go Version](https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white)
 ![Configured with YAML](https://img.shields.io/badge/Config-YAML-CB171E?logo=yaml&logoColor=white)
-![Version](https://img.shields.io/badge/Version-0.0.20-blue)
+![Version](https://img.shields.io/badge/Version-0.0.30-blue)
 
 
 ## 🚀 ¿Qué es Yamblg?

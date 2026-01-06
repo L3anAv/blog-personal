@@ -1,98 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamblg | Crea tu blog rápidamente</title>
-    
-    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="/assets/style.css"> 
-        <style>
-        *{
-          font-family:Verdana, sans-serif;
-        }
-        
-        .titulo h2{
-         color:#0663e9;
-        }
-
-        .titulo:visited h2{
-         color: #0663e9; 
-        }
-
-        .titulo:hover h2{
-         color: black;
-        }
-
-        .link:link {
-         color: black;
-        }
-
-        .link:visited {
-         color: #f99c16;
-        }
-
-        .link:hover {
-         color: black;
-        }
-        .contenedor-banner{
-            display:flex; 
-            flex-direction:row;
-        }
-
-        @media screen and (max-width: 915px) {
-            .contenedor-banner{
-            flex-direction:column;
-        }
-        }
-        </style>
-</head>
-<body style="display:flex; flex-direction:column; align-items: center; justify-items:center; ">
-    <div class="contenedor-banner">
-        <img style="margin-left:10%; width: clamp(10%, 20%, 40%); height: auto;" src="./assets/yamblg-logo.png" />
-        <header>
-            <h1 style="margin-left:20px; margin-top:10%;">Bienvenidx a Yamblg</h1>
-            <p style="margin-left:20px;" >Demo generada para ver el blog basico (Go + YAML)</p>
-        </header>
-    </div>
-
-
-<main style="display: flex; justify-content: center; align-items: flex-start; margin-top: 30px; width: 100%;">
-
-    <aside style="width: 20%; display: flex; flex-direction: column;">
-        <p style="font-weight: bold;">Post Recientes</p>
+{{define "content"}}
+<aside style="width: 20%; display: flex; flex-direction: column;">
+        <p style="font-weight: bold; width: max-content; padding:5px;">Últimos 5 posteos</p>
         <ul style="list-style: none; width: 100%; display: flex; flex-direction: column; padding: 0;">
-            {{ range .Posts }}
-                <a class="link" style="margin-left:5%; width:max-content; cursor:pointer; color: #0663e9;" href="{{ $.BaseURL }}/{{ .Link }}"><li style="font-size: 12px; color:#0663e9; margin-bottom: 8px;">{{ .Title }}</li></a>
+            {{ range .Latest }}
+                    <a style="margin:2% 0 0 5%; width:max-content; cursor:pointer;" href="{{ $.BaseURL }}/{{ .Link }}"><li class="ultimos" style="font-size: 12px;">{{ .Title }}</li></a>
             {{ end }}
         </ul>
-    </aside>
+            <a class="posteos" href="{{ $.BaseURL }}/lista-de-posteos.html" style="border:none; font-weight: bold; font-size: clamp(0.625rem, 0.5529rem + 0.3846vw, 0.8125rem); padding:5px;">Ver todos los posteos</a>
+</aside>
 
-    <ul style="list-style: none; width: max-content; display: flex; flex-direction: column; align-items: center; justify-content: center;  padding: 0; margin:0;">
+    <ul style="list-style: none; width: 60%; display: flex; flex-direction: column; align-items: center; justify-content: center;  padding: 0; margin:0;">
         {{ range .Posts }}
-        <li style="display: block; width: 85%; border: 0.5px dashed #000; padding: 20px; margin-bottom: 20px;">
-            <a class="titulo" style="cursor: pointer; text-decoration: none; color: inherit;" href="{{ $.BaseURL }}/{{ .Link }}">
-                <h2 style="font-size: clamp(0.75rem, 0.5096rem + 1.2821vw, 1.375rem); margin: 0;">{{ .Title }}</h2>
+            {{ if .Fijado }}
+        <li style="display: flex; flex-direction: column; background:#d3d2d0; width: 80%; border: 0.5px dashed #000; padding: 10px; margin-bottom: 20px;">
+         <p style="margin: 0 0 10px 0; line-height: 1; background:#d3d2d0;">📌</p>
+            <a style="width: max-content; cursor:pointer; text-decoration: none;" href="{{ $.BaseURL }}/{{ .Link }}">
+                <p class="titulo" style="font-weight: bold; background:#d3d2d0; font-size: clamp(0.75rem, 0.5096rem + 1.2821vw, 1.375rem); margin: 0;">{{ .Title }}</p>
             </a>
-            <p style="margin: 10px 0; font-size: clamp(0.625rem, 0.5529rem + 0.3846vw, 0.8125rem);">{{ .Description }}</p>
+            <p style="background:#d3d2d0; margin: 10px 0; font-size: clamp(0.625rem, 0.5529rem + 0.3846vw, 0.8125rem);">{{ .Description }}</p>
             
-            <a class="link" style="cursor: pointer; color: #0663e9;" href="{{ $.BaseURL }}/{{ .Link }}">
-                <h3 style="font-size: clamp(0.625rem, 0.5529rem + 0.3846vw, 0.8125rem); margin: 0;"> Leer -></h3>
+            <a style="all:unset; background:#d3d2d0; cursor: pointer; text-decoration: none;" class="link" href="{{ $.BaseURL }}/{{ .Link }}">
+                <button style=" border:none; font-weight: bold; font-size: clamp(0.625rem, 0.5529rem + 0.3846vw, 0.8125rem); padding:5px; border-radius: 5px;"> Leer -></button>
             </a>
             
-            <small style="display: block; text-align: right; margin-top: 12px; font-size: 13px; color: #666;">
+            <small style="display: block; background:#d3d2d0; padding:3px; text-align: center; margin-top: 12px; font-size: 13px; color: #666;">
                 {{ .Author }} el {{ .Date }}
             </small>
         </li>
+            {{ end }}
         {{ end }}
     </ul>
-
-</main>
-<br>
-    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; background-color: #1a1a1a; color: white; z-index: 1000;">
-        <p>© 2026 - Hecho con ❤️ y Go</p>
-    </footer>
-</body>
-</html>
+{{end}}

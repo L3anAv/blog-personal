@@ -1,0 +1,116 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamblg | Crea tu blog rápidamente</title>
+    
+    <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="/assets/style.css"> 
+        <style>
+        *{
+          font-family:Verdana, sans-serif;
+          background-color: #ebeaef;
+        }
+        
+        .titulo{
+         color:#0663e9;
+        }
+
+        .titulo:visited{
+         color: #0663e9; 
+        }
+
+        .titulo:hover{
+         color: #f99c16;
+        }
+
+        .link{
+            color:#0663e9;
+            text-decoration: underline;
+        }
+
+        .link:hover{
+            color:#000;
+        }
+        .ultimos{
+            color:#3563a3;
+        }
+        .ultimos:hover{
+            background-color:#f99c16;
+        }
+        .posteos{
+            color:#3563a3;
+        }
+        .posteos:hover{
+            color:#000;
+            text-decoration: underline;
+        }
+        .contenedor-banner{
+            display:flex; 
+            flex-direction:row;
+        }
+        .contenedor{
+            align-items: flex-start;
+            flex-direction: row;
+        }
+       
+        aside{
+            border:1px solid #000;
+            margin-right: 20px;
+        }
+        button:hover{
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        a{
+            display: block;
+        }
+        a p{
+            word-wrap: break-word;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        @media screen and (max-width: 915px) {
+            .contenedor-banner{
+            flex-direction:column;
+            }
+        }
+
+        @media screen and (max-width: 965px){
+            .contenedor{
+                align-items: center;
+                flex-direction: column;
+            }
+            aside{
+                border:none;
+                margin-bottom:30px;
+                margin-right:0;
+            }
+           
+        }
+        </style>
+</head>
+<body style="display:flex; flex-direction:column; align-items: center; justify-items:center; ">
+    <div class="contenedor-banner">
+        <img style="margin-left:10%; width: clamp(10%, 20%, 40%); height: auto;" src="./assets/yamblg-logo.png" />
+        <header>
+            <h1 style="margin-left:20px; margin-top:10%;">Bienvenidx a Yamblg</h1>
+            <p style="margin-left:20px;" >Demo generada para ver el blog basico (Go + YAML)</p>
+        </header>
+    </div>    
+
+    <main class="contenedor" style="display: flex; justify-content: center; margin-top: 30px; width: 100%;">
+        {{template "content" .}}
+    </main>
+    <br>
+    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: center; background: #1a1a1a; color: white; z-index: 1000;">
+        <p style=" background: #1a1a1a;">© 2026 - Hecho con ❤️ y Go</p>
+    </footer>
+</body>
+</html>
+{{end}}
