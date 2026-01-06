@@ -6,11 +6,14 @@
 
 <br>
 
+<div align="center">
+
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
 ![Go Version](https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white)
 ![Config](https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white)
 ![Version](https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square)
 
+</div>
 
 ## 🚀 ¿Qué es Yamblg?
 No es un software que se instala, sino un punto de partida para tu identidad digital. El nombre juega con la fonética "I am blog" y la **"g"** final rinde tributo a **Go**, el lenguaje que procesa tu nuevo blog de forma casi instantánea.
