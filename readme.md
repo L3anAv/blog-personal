@@ -6,10 +6,10 @@
 
 <br>
 
-![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
 ![Go Version](https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white)
-![Configured with YAML](https://img.shields.io/badge/Config-YAML-CB171E?logo=yaml&logoColor=white)
-![Version](https://img.shields.io/badge/Version-0.0.30-blue)
+![Config](https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white)
+![Version](https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square)
 
 
 ## 🚀 ¿Qué es Yamblg?
