@@ -1,0 +1,42 @@
+/* Usar un modelo de caja más intuitivo */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Evitar que las imágenes se salgan de su contenedor */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Heredar fuentes para inputs y botones */
+input, button, textarea, select {
+  font: inherit;
+}
+
+/* Evitar saltos de línea raros y mejorar renderizado */
+html {
+  hanging-punctuation: first last;
+}
+
+body{
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body{
+  height: 100%;
+  margin: 0;
+}
+
+ul {
+  list-style: none; 
+  padding: 0;       
+  margin: 0;        
+}
+
+li {
+  margin: 0;
+  padding: 0;
+}

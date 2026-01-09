@@ -1,0 +1,59 @@
+@import url("reset.css");
+@import url("fonts.css");
+@import url("root.css");
+@import url("class.css");
+
+* {
+
+  margin: 0;
+  padding: 0;
+
+  font-family:Verdana, sans-serif;
+  background-color: var(--bg-body);
+}
+
+body{
+
+  display: grid;
+  min-height: 100dvh;
+
+  place-items: center;
+  grid-template-rows: auto 1fr auto;
+
+}
+
+header h1{
+  margin-top:10%;
+  font-weight:800;
+  margin-left:20px;
+  font-family:var(--font-secundary); 
+}
+
+header p{
+  font-size:18px;
+  margin-left:20px;
+}
+
+main{
+
+  width: 50%;
+
+  display: flex;
+  place-items: center;
+  flex-direction: column;
+
+}
+
+footer{
+  width: 100%;
+  display: flex; 
+  color: white;
+  align-items: center; 
+  height: 40px;
+  justify-content: center;
+  background: #1a1a1a;
+}
+
+footer p{
+  background: #1a1a1a;
+}

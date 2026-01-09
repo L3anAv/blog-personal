@@ -1,21 +1,21 @@
 {{define "content"}}
-    <div style="overflow-x: auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; background-color: white;">
+    <div style="overflow-x: auto;">
+    <table style=" width: 100%; border-collapse: collapse; text-align: left; font-size: 18px; background-color: white;">
         
         <thead>
             <tr style="border-bottom: 1px solid #eee;">
-                <th style="padding: 12px 15px; color: #333; font-weight: 600; border:1px solid #969696;">Título</th>
-                <th style="padding: 12px 15px; color: #fff; font-weight: 600; background-color: #969696; border:1px solid #969696;">Fecha</th>
-                <th style="padding: 12px 15px; color: #333; font-weight: 600;  border:1px solid #969696;">Autor</th>
+                <th style="font-family:FinSerif; padding: 12px 15px; color: #333; font-weight: 600; border:1px solid #969696;">Título</th>
+                <th style="font-family:FinSerif; padding: 12px 15px; color: #fff; font-weight: 600; background-color: #969696; border:1px solid #969696;">Fecha</th>
+                <th style="font-family:FinSerif; padding: 12px 15px; color: #333; font-weight: 600;  border:1px solid #969696;">Autor</th>
             </tr>
         </thead>
          
         <tbody>
             {{ range .Posts }}
             <tr>
-                <td style="padding: 5px 15px; color: #fff; background-color: #969696;"><a style=" background-color: #969696; color:#fff; text-decoration: underline; width: max-content; cursor:pointer;" href="{{ $.BaseURL }}/{{ .Link }}">{{ .Title }}</a></td>
-                <td style="padding: 5px 15px; color: #000; border:1px solid #969696;">{{ .Date }}</td>
-                <td style="padding: 5px 15px; color: #fff; background-color: #969696;">{{ .Author }}</td>
+                <td style="padding: 5px 15px; color: #fff; background-color: #969696;"><a style=" font-family:FinSerif; background-color: #969696; color:#fff; text-decoration: underline; width: max-content; cursor:pointer;" href="{{ $.BaseURL }}/{{ .Link }}">{{ .Title }}</a></td>
+                <td style="font-family:FinSerif; padding: 5px 15px; color: #000; border:1px solid #969696;">{{ .Date }}</td>
+                <td style="font-family:FinSerif; padding: 5px 15px; color: #fff; background-color: #969696;">{{ .Author }}</td>
             </tr>
             {{ end }}
         </tbody>

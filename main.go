@@ -23,7 +23,7 @@ type Post struct {
 }
 
 // Función para copiar archivos (assets)
-func copyAssets(src, dst string) error {
+func copyRoute(src, dst string) error {
 	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if err != nil { return err }
 		relPath, _ := filepath.Rel(src, path)
@@ -45,6 +45,36 @@ func slugify(s string) string {
 	return strings.Trim(s, "-")
 }
 
+// Función generalizada y reutilizable
+func renderPage(outputFile string, contentTemplate string, data any) {
+    // Definimos los archivos base que siempre se usan
+    files := []string{
+        "templates/layout.html",
+        "templates/banner.html", // Agregamos el banner aquí
+        filepath.Join("templates", contentTemplate),
+    }
+
+    // Parseamos todos los archivos juntos
+    tmpl, err := template.ParseFiles(files...)
+    if err != nil {
+        fmt.Printf("Error parseando templates para %s: %v\n", outputFile, err)
+        return
+    }
+
+    f, err := os.Create(filepath.Join("public", outputFile))
+    if err != nil {
+        fmt.Printf("Error creando archivo %s: %v\n", outputFile, err)
+        return
+    }
+    defer f.Close()
+
+    // Ejecutamos el bloque principal (asumiendo que layout.html define "base")
+    err = tmpl.ExecuteTemplate(f, "base", data)
+    if err != nil {
+        fmt.Printf("Error ejecutando template %s: %v\n", outputFile, err)
+    }
+}
+
 func main() {
 	
 	// 1. Configuración inicial
@@ -55,7 +85,10 @@ func main() {
 
 	files, _ := os.ReadDir("content")
 	os.MkdirAll("public", 0755)
-	copyAssets("assets", "public/assets")
+
+	// Copiar Archivos
+	copyRoute("assets", "public/assets")
+	copyRoute("style", "public/style")
 
 	var allPosts []Post
 
@@ -91,28 +124,16 @@ func main() {
 	if len(allPosts) < 5 {
 		limite = len(allPosts)
 	}
-
-	// 3. Renderizar Index pasándole el array completo
-	// El filtrado (fijado: true/false) se hace en el HTML con {{ if .Fijado }}
-	renderConLayout := func(outputFile string, contentTemplate string, data any) {
-    // Cargamos el layout Y la página de contenido específica
-    tmpl := template.Must(template.ParseFiles("templates/layout.html", "templates/"+contentTemplate))
-    f, _ := os.Create(filepath.Join("public", outputFile))
-    defer f.Close()
-    
-    // IMPORTANTE: Ejecutamos "base" que está definido en layout.html
-			tmpl.ExecuteTemplate(f, "base", data)
-	}
-
+	
 	data := map[string]any{
 			"BaseURL": baseUrl,
 			"Posts":   allPosts,
 			"Latest":  allPosts[:limite],
 	}
 
-	// Renderizamos ambas páginas usando el mismo layout
-	renderConLayout("index.html", "index.html", data)
-	renderConLayout("lista-de-posteos.html", "lista-de-posteos.html", data)
+	// Renderizamos ambas páginas usando el layout
+	renderPage("index.html", "index.html", data)
+	renderPage("lista-de-posteos.html", "lista-de-posteos.html", data)
 
 	fmt.Println("🚀 Blog generado con éxito")
 	fmt.Printf("Total de posts procesados: %d\n", len(allPosts))
