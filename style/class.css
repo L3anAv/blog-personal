@@ -162,3 +162,137 @@
     height: auto;
     width: clamp(10%, 20%, 35%);
 }
+
+/* BLOG */
+
+.blog-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    margin: 2rem auto;
+    padding: 0 20px;
+    max-width: 55%;
+    transition: max-width 0.3s ease;
+    background:var(--bg-body);
+  }
+
+  /* Media query para que sea responsive */
+  @media (max-width: 1024px) {
+    .blog-container {
+      max-width: 70%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .blog-container {
+      max-width: 100%;
+      margin: 1rem auto;
+    }
+  }
+
+  /* Enlace de volver */
+  .link-back {
+    display: inline-block;
+    text-decoration: none;
+    color: #0663e9;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s;
+  }
+
+  .link-back:hover {
+    transform: translateX(-5px);
+  }
+
+  /* Tarjeta o borde del post */
+  .post-card {
+    padding: 2rem;
+    background:var(--bg-body);
+    border: 0.5px dashed #000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  /* Títulos y textos */
+  .post-title {
+    color: #0663e9;
+    font-size: 2.5rem;
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
+  }
+
+  .post-meta {
+    color: #666;
+    font-size: 0.9rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-body {
+    font-size: 1.1rem;
+    white-space: pre-line; /* Mantiene saltos de línea del body */
+    color: #2c3e50;
+  }
+
+/* TABLA */
+
+/* Contenedor para scroll horizontal en móviles */
+.table-container {
+    overflow-x: auto;
+}
+
+/* Estilos generales de la tabla */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 18px;
+    background-color: white;
+}
+
+/* Estilos para encabezados y celdas */
+.custom-table th, 
+.custom-table td {
+    font-family: 'FinSerif', serif; /* Asegúrate de que la fuente esté cargada */
+    padding: 12px 15px;
+    border: 1px solid #969696;
+}
+
+/* Variaciones específicas para el encabezado */
+.custom-table thead tr {
+    border-bottom: 1px solid #eee;
+}
+
+.th-dark {
+    color: #fff;
+    background-color: #969696;
+    font-weight: 600;
+}
+
+.th-light {
+    color: #333;
+    font-weight: 600;
+}
+
+/* Estilos para el cuerpo de la tabla */
+.td-highlight {
+    color: #fff;
+    background-color: #969696;
+    padding: 5px 15px; /* Mantiene el padding reducido que tenías */
+}
+
+.td-highlight a{
+  background:#969696;
+}
+
+.td-standard {
+    color: #000;
+    padding: 5px 15px;
+}
+
+/* Estilos del enlace */
+.table-link {
+    color: #fff;
+    text-decoration: underline;
+    width: max-content;
+    cursor: pointer;
+}

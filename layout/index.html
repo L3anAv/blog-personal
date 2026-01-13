@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yamblg | Crea tu blog rápidamente</title>
+    <title>{{block "title" .}}
+            Yamblg | Crea tu blog rápidamente
+            {{end}}
+    </title>
     
     <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
     <link rel="stylesheet" href="{{ .BaseURL }}/style/theme.css">
@@ -12,16 +15,7 @@
     <link rel="stylesheet" href="/assets/style.css"> 
 </head>
 <body>
-    
-    {{template "banner" .}}
-
-    <main>
-        {{template "content" .}}
-    </main>
-
-    <footer>
-        <p>© 2026 - Hecho con ❤️ y Go</p>
-    </footer>
+    {{ template "content" .}}
 </body>
 </html>
 {{end}}

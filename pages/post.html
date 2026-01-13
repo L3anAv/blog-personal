@@ -1,0 +1,18 @@
+{{define "content"}}
+<section class="blog-container">
+  <a class="link-back" href="{{ .BaseURL }}/index.html">← Volver al inicio</a>
+
+  <article class="post-card">
+    <header>
+      <h1 class="post-title">{{ .Post.Title }}</h1>
+      <p class="post-meta">
+        <em>Publicado por <strong>{{ .Post.Author }}</strong> • {{ .Post.Date }}</em>
+      </p>
+    </header>
+
+    <div class="post-body">
+      {{ .Post.Body }}
+    </div>
+  </article>
+</section>
+{{ end }}
