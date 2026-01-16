@@ -1,1 +1,7 @@
-base_url: "/Yamblg"
+# Config
+baseUrl: "/Yamblg"
+siteTitle: "Yamblg | Crea tu blog rápidamente"
+usePinned:
+    active: false
+    limitOfPost: 5
+    method: "Latest"

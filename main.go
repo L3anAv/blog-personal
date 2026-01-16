@@ -1,26 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"html/template"
-	"io"
 	"os"
+	"io"
+	"fmt"
+	"log"
 	"path/filepath"
-	"regexp"
-	"strings"
-
-	"gopkg.in/yaml.v3"
+	
+	"yamblg/builder"
 )
-
-type Post struct {	
-	Title       string `yaml:"title"`
-	Date        string `yaml:"date"`
-	Author      string `yaml:"author"`
-	Body        string `yaml:"body"`
-	Description string `yaml:"description"`
-	Fijado      bool   `yaml:"fijado"`
-	Link        string
-}
 
 // Función para copiar archivos (assets, estilos, etc.)
 func copyRoute(src, dst string) error {
@@ -42,128 +30,77 @@ func copyRoute(src, dst string) error {
 	})
 }
 
-func slugify(s string) string {
-	s = strings.ToLower(s)
-	reg := regexp.MustCompile("[^a-z0-9]+")
-	s = reg.ReplaceAllString(s, "-")
-	return strings.Trim(s, "-")
-}
-
-// Renderiza una página asegurando que existan las subcarpetas necesarias
-func renderPage(outputFile string, contentTemplate string, data any) {
-	// 1. Configurar archivos base
-	files := []string{"layout/index.html"}
-
-	// 2. Cargar componentes dinámicamente
-	components, err := filepath.Glob("components/*.html")
-	if err != nil {
-		fmt.Printf("Error buscando componentes: %v\n", err)
-		return
-	}
-	files = append(files, components...)
-	files = append(files, filepath.Join("pages", contentTemplate))
-
-	// 3. Parsear templates
-	tmpl, err := template.ParseFiles(files...)
-	if err != nil {
-		fmt.Printf("Error parseando templates para %s: %v\n", outputFile, err)
-		return
-	}
-
-	// 4. Lógica de directorios: public/ + ruta solicitada
-	fullOutputPath := filepath.Join("public", outputFile)
-	outputDir := filepath.Dir(fullOutputPath)
-
-	// Crea public/ y cualquier subcarpeta (como public/post) si no existen
-	err = os.MkdirAll(outputDir, 0755)
-	if err != nil {
-		fmt.Printf("Error creando directorios: %v\n", err)
-		return
-	}
-
-	// 5. Crear archivo y ejecutar template
-	f, err := os.Create(fullOutputPath)
-	if err != nil {
-		fmt.Printf("Error creando archivo %s: %v\n", fullOutputPath, err)
-		return
-	}
-	defer f.Close()
-
-	// Se asume que el bloque principal en tus .html se llama "base"
-	err = tmpl.ExecuteTemplate(f, "base", data)
-	if err != nil {
-		fmt.Printf("Error ejecutando %s: %v\n", outputFile, err)
-	}
-}
-
 func main() {
-	// 1. Cargar configuración
-	configRaw, err := os.ReadFile("config.yaml")
-	if err != nil {
-		fmt.Println("Error: No se encontró config.yaml")
-		return
-	}
-	var config map[string]string
-	yaml.Unmarshal(configRaw, &config)
-	baseUrl := config["base_url"]
 
-	// 2. Limpieza y preparación inicial
-	os.RemoveAll("public") // Opcional: limpia antes de generar
+// 1. Obtener datos para crear .htmls
+	cfg, err := builder.LoadConfig()
+	if err != nil {
+        log.Fatal(err)
+    }
+
+	// Instancia
+	b := &builder.Builder{}
+	
+	// Inicializaciones
+	paginasDetectadas, err := b.InitTemplates()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+	allPosts, err := builder.LoadPosts()
+	if err != nil {
+		log.Fatalf("Error cargando posts: %v", err)
+	}
+	
+	limitePosts := min(len(allPosts), cfg.UsePinned.LimitOfPost)
+	
+// 2. Limpieza y preparación
+	os.RemoveAll("public")
 	os.MkdirAll("public", 0755)
 
-	// Copiar archivos estáticos
+	// Antes de copiar, esBuild para minificar
 	copyRoute("assets", "public/assets")
 	copyRoute("style", "public/style")
 
-	// 3. Procesar contenidos
-	files, _ := os.ReadDir("content")
-	var allPosts []Post
-
-	for _, file := range files {
-		if filepath.Ext(file.Name()) == ".yaml" {
-			content, _ := os.ReadFile(filepath.Join("content", file.Name()))
-			var post Post
-			yaml.Unmarshal(content, &post)
-
-			// Determinar nombre del archivo .html
-			var fileName string
-			if post.Title != "" {
-				fileName = slugify(post.Title) + ".html"
-			} else {
-				fileName = strings.TrimSuffix(file.Name(), ".yaml") + ".html"
-			}
-
-			// IMPORTANTE: Definimos la ruta relativa para el enlace y el archivo
-			// Esto hará que renderPage lo guarde en public/post/
-			post.Link = "post/" + fileName
-
-			allPosts = append(allPosts, post)
-
-			// Renderizado individual del post
-			postData := map[string]any{
-				"BaseURL": baseUrl,
-				"Post":    post,
-			}
-			renderPage(post.Link, "post.html", postData)
-		}
-	}
-
-	// 4. Renderizar páginas globales (Index y Lista)
-	limite := 5
-	if len(allPosts) < 5 {
-		limite = len(allPosts)
-	}
-
-	data := map[string]any{
-		"BaseURL": baseUrl,
+// 3. Procesar Posts del blog
+	b.BuildPosts(cfg.BaseURL, allPosts)
+	
+// 4. Renderizado de .html globales
+	
+	// 4.1 Pasando data para los tmpl
+	PagesData := map[string]any{
+		"BaseURL": cfg.BaseURL,
+		"Title": cfg.SiteTitle,
 		"Posts":   allPosts,
-		"Latest":  allPosts[:limite],
+		"Latest":  allPosts[:limitePosts],
 	}
 
-	// Estas se guardan en public/ (raíz)
-	renderPage("index.html", "home.html", data)
-	renderPage("lista-de-posteos.html", "lista-de-posteos.html", data)
+	// 4.2 Creando los .html
+	for _, nombreArchivo := range paginasDetectadas {
+        
+        // Caso especial: La plantilla de posts no se genera sola aquí
+        // porque necesita datos (la lista de artículos).
+        if nombreArchivo == "post.html" {
+            continue 
+        }
 
+        // Renderizamos (usando el nombre como llave del mapa)
+        result, err := b.BuildPage(nombreArchivo, PagesData)
+        if err != nil {
+            log.Printf("Error en %s: %v", nombreArchivo, err)
+            continue
+        }
+
+        // Creamos la ruta en la raíz de public/
+        err = builder.CreateRoute(builder.RoutePublic, "", result)
+        if err != nil {
+            log.Fatal(err)
+        }
+        
+        fmt.Printf("✓ Página generada: %s\n", result.FolderName)
+    }
+
+// 5. Logs de terminal para verificar
 	fmt.Println("🚀 Sitio generado con éxito en /public")
 	fmt.Printf("📂 Posts en: public/post/\n")
 	fmt.Printf("📄 Páginas en: public/\n")

@@ -171,7 +171,7 @@
     color: #333;
     margin: 2rem auto;
     padding: 0 20px;
-    max-width: 55%;
+    width: 55%;
     transition: max-width 0.3s ease;
     background:var(--bg-body);
   }
@@ -207,7 +207,7 @@
   /* Tarjeta o borde del post */
   .post-card {
     padding: 2rem;
-    background:var(--bg-body);
+    background:var(--bg-box);
     border: 0.5px dashed #000;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   }
@@ -229,8 +229,9 @@
 
   .post-body {
     font-size: 1.1rem;
-    white-space: pre-line; /* Mantiene saltos de línea del body */
     color: #2c3e50;
+    padding:8px;
+    background:var(--bg-box);
   }
 
 /* TABLA */

@@ -1,4 +1,4 @@
-module mi-blog
+module yamblg
 
 go 1.25.4
 
