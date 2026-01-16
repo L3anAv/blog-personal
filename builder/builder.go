@@ -7,6 +7,9 @@ import (
 	"strings"
 	"html/template"
 	"path/filepath"
+
+	"github.com/tdewolff/minify/v2"
+    "github.com/tdewolff/minify/v2/html"
 )
 
 type Builder struct {
@@ -86,9 +89,23 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
         return RenderResult{}, fmt.Errorf("error ejecutando template: %w", err)
     }
 
+	// --- BLOQUE DE MINIFICACIÓN ---
+	m := minify.New()
+    m.AddFunc("text/html", html.Minify) // Configuramos el minificador de HTML
+	
+    minified, err := m.Bytes("text/html", buf.Bytes())
+    if err != nil {
+        // Si falla la minificación, devolvemos el HTML normal por seguridad
+        return RenderResult{
+            FolderName: folderName,
+            Content:    buf.Bytes(),
+        }, nil
+    }
+
+	// Retorno minificado
     return RenderResult{
         FolderName: folderName,
-        Content:    buf.Bytes(),
+        Content:    minified,
     }, nil
 }
 /*

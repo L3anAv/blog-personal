@@ -57,10 +57,13 @@ func main() {
 // 2. Limpieza y preparación
 	os.RemoveAll("public")
 	os.MkdirAll("public", 0755)
+	os.MkdirAll("public/style", 0755)
 
-	// Antes de copiar, esBuild para minificar
+	// Antes de copiar
 	copyRoute("assets", "public/assets")
-	copyRoute("style", "public/style")
+
+	//Minificar CSS
+	builder.MinifyCSS()
 
 // 3. Procesar Posts del blog
 	b.BuildPosts(cfg.BaseURL, allPosts)
