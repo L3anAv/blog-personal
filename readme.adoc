@@ -3,24 +3,37 @@ Author !Leandro Avila leandroav.dev@gmail.com
 
 :fecha: 19/01/2026
 
+ifdef::env-github[]
+++++
 <p align="center">
   <img src="logo.png" alt="Yamblg Logo" width="max-content">
 </p>
+++++
+endif::[]
 
-**Yamblg** diseñado para quienes quieren un blog personal rápidamente, sin tanta configuración. La idea es: copias el repositorio, creas las publicaciones en YAML, y publicas en GitHub Pages.
+== **Yamblg**
+&#13;
+> Diseñado para quienes quieren un blog personal rápidamente, sin tanta configuración. La idea es: copias el repositorio, creas las publicaciones en YAML, y publicas en GitHub Pages.
 
-<br />
-
+ifdef::env-github[]
+++++
 <div align="center">
 
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
-![Go Version](https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white)
-![Config](https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white)
-![Version](https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square)
+image:https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square[Status]
+
+image:https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white[Go Version]
+
+image:https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white[Config]
+
+image:https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square[Version]
 
 </div>
+++++
+endif::[]
 
-## 🛠️ [.underline]#¿Cómo se usa?#.
+
+
+== 🛠️ [.underline]#¿Cómo se usa?#.
 
 Tener tu blog es tan sencillo como seguir estos tres pasos:
 
