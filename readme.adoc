@@ -71,6 +71,4 @@ Desarrollado para la simplicidad. Desarollado para la comunidad. 💖 &#13;
 **¡Go publish!**
 
 [.small]
-Ultima Actualizacion del documento: 
-&#13;
-{fecha}
+Ultima Actualizacion del documento: &#13; {fecha}
