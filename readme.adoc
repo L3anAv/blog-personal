@@ -11,10 +11,10 @@ ifdef::env-github[]
 ++++
 endif::[]
 
-== **Yamblg**
+= **Yamblg**
 &#13;
 
-> Diseñado para quienes quieren un blog personal rápidamente, sin tanta configuración. La idea es: copias el repositorio, creas las publicaciones en YAML, y publicas en GitHub Pages.
+Diseñado para quienes quieren un blog personal rápidamente, sin tanta configuración. La idea es: copias el repositorio, creas las publicaciones en YAML, y publicas en GitHub Pages.
 
 
 [.text-center]
