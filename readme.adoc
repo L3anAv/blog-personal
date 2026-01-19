@@ -46,7 +46,8 @@ date: "03-01-2025"
 fijado: false
 author: "!Leandro Avila"
 description: "Primer post creado para mostrar en la demo."
-body: "Bienvenido a la demo de Yamblg. Gracias por su visita. Espero que te sea de utilidad el mini proyecto."
+body: "Bienvenido a la demo de Yamblg. Gracias por su visita. 
+Espero que te sea de utilidad el mini proyecto."
 
 * **Publica:** pushea los cambios al repositorio, ¡Listo!.
 
