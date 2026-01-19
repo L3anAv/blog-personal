@@ -66,8 +66,8 @@ Yamblg utiliza una arquitectura de SSG.
 * **Go como Procesador:** El binario de Go toma tus archivos YAML y los transforma en HTML puro usando las pages.
 * **Automatización Total:** Gracias a GitHub Actions, cada vez que editas un archivo y subes el cambio la repositorio, el blog se reconstruye y se despliega solo.
 
-Desarrollado para la simplicidad. Desarollado para la comunidad. 💖
-&#13;
+Desarrollado para la simplicidad. Desarollado para la comunidad. 💖 &#13;
+
 **¡Go publish!**
 
 [.small]
