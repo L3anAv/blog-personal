@@ -108,55 +108,7 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
         Content:    minified,
     }, nil
 }
-/*
-func RenderPage(outputFile string, contentTemplate string, data any) {
-	
-	// 1. Configurar archivos base
-	files := []string{"layout/index.html"}
 
-	// 2. Cargar componentes dinámicamente
-	components, err := filepath.Glob("components/*.html")
-	if err != nil {
-		fmt.Printf("Error buscando componentes: %v\n", err)
-		return
-	}
-	files = append(files, components...)
-	files = append(files, filepath.Join("pages", contentTemplate))
-
-	// 3. Parsear templates
-	tmpl, err := template.ParseFiles(files...)
-	if err != nil {
-		fmt.Printf("Error parseando templates para %s: %v\n", outputFile, err)
-		return
-	}
-
-	// 4. Lógica de directorios: public/ + ruta solicitada
-	fullOutputPath := filepath.Join("public", outputFile)
-	outputDir := filepath.Dir(fullOutputPath)
-
-	// Crea public/ y cualquier subcarpeta (como public/post) si no existen
-	err = os.MkdirAll(outputDir, 0755)
-	if err != nil {
-		fmt.Printf("Error creando directorios: %v\n", err)
-		return
-	}
-
-	// 5. Crear archivo y ejecutar template
-	f, err := os.Create(fullOutputPath)
-	if err != nil {
-		fmt.Printf("Error creando archivo %s: %v\n", fullOutputPath, err)
-		return
-	}
-	defer f.Close()
-	
-
-	// Se asume que el bloque principal en tus .html se llama "base"
-	err = tmpl.ExecuteTemplate(f, "base", data)
-	if err != nil {
-		fmt.Printf("Error ejecutando %s: %v\n", outputFile, err)
-	}
-}
-*/
 func (b *Builder) BuildPosts(baseUrl string, allPosts []Post) {
 	
 	// 3.2 Recorrer y renderizar los posts

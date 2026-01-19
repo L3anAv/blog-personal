@@ -1,0 +1,69 @@
+[comment]
+Author !Leandro Avila leandroav.dev@gmail.com
+
+:fecha: 19/01/2026
+
+<p align="center">
+  <img src="logo.png" alt="Yamblg Logo" width="max-content">
+</p>
+
+**Yamblg** diseñado para quienes quieren un blog personal rápidamente, sin tanta configuración. La idea es: copias el repositorio, creas las publicaciones en YAML, y publicas en GitHub Pages.
+
+<br />
+
+<div align="center">
+
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
+![Go Version](https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white)
+![Config](https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white)
+![Version](https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square)
+
+</div>
+
+## 🛠️ [.underline]#¿Cómo se usa?#.
+
+Tener tu blog es tan sencillo como seguir estos tres pasos:
+
+* **Fork Master o copias el repositorio**
+
+* **Configura:** Crea archivos del estilo `{name}.yaml` (el {name} se utiliza en tal caso de que title sea vacío). El archivo se crea siguiendo la siguiente estructura:
+
+[source,text]
+title: <Nombre de la entrada>
+date: Completa automaticamente con la fecha de creación del archivo.
+fijado: Se muestra en home resaltado
+author: <Quien escribe la entrada>
+description: <Resumen de contenido>
+body: <Contenido de la entrada>
+
+.Ejemplo:
+[source,yalm]
+include::content/03-01-2025-1.yaml[]
+
+* **Publica:** pushea los cambios al repositorio, ¡Listo!.
+
+[WARNING]
+====
+**¡OJO!** En los ajustes de tu repositorio, ve a PAGES y activa *GitHub Pages* con la opcion de **Github Actions**.
+====
+
+image::github-actions.gif[]
+
+
+## ⚙️ Cómo funciona
+
+Yamblg utiliza una arquitectura de SSG.
+
+* **YAML para el contenido:** No hay bases de datos. Todo el contenido y la configuración viven en archivos de texto plano fáciles de leer.
+* **Go como Procesador:** El binario de Go toma tus archivos YAML y los transforma en HTML puro usando las pages.
+* **Automatización Total:** Gracias a GitHub Actions, cada vez que editas un archivo y subes el cambio la repositorio, el blog se reconstruye y se despliega solo.
+
+<br />
+
+Desarrollado para la simplicidad. Desarollado para la comunidad. 💖
+<br>
+**¡Go publish!**
+
+'''
+[.small]
+Ultima Actualizacion del documento: {fecha}

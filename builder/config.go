@@ -32,7 +32,6 @@ func LoadConfig() (Config, error){
 }
 
 func MinifyCSS() {
-    // Minificar CSS
     result := api.Build(api.BuildOptions{
         EntryPoints:       []string{"style/index.css"}, // Tu archivo principal
         Outfile:           "public/style/index.css",
