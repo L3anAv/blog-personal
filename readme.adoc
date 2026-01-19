@@ -13,23 +13,16 @@ endif::[]
 
 == **Yamblg**
 &#13;
+
 > Diseñado para quienes quieren un blog personal rápidamente, sin tanta configuración. La idea es: copias el repositorio, creas las publicaciones en YAML, y publicas en GitHub Pages.
 
-ifdef::env-github[]
-++++
-<div align="center">
 
+[.text-center]
 image:https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square[Status]
-
 image:https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white[Go Version]
-
 image:https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white[Config]
-
 image:https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square[Version]
 
-</div>
-++++
-endif::[]
 
 
 
@@ -71,7 +64,6 @@ Yamblg utiliza una arquitectura de SSG.
 * **Go como Procesador:** El binario de Go toma tus archivos YAML y los transforma en HTML puro usando las pages.
 * **Automatización Total:** Gracias a GitHub Actions, cada vez que editas un archivo y subes el cambio la repositorio, el blog se reconstruye y se despliega solo.
 
-<br />
 
 Desarrollado para la simplicidad. Desarollado para la comunidad. 💖
 <br>
