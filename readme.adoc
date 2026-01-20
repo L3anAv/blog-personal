@@ -33,7 +33,7 @@ Tener tu blog es tan sencillo como seguir estos tres pasos:
 
 [source,text]
 title: <Nombre de la entrada>
-date: Completa automaticamente con la fecha de creación del archivo.
+date: Completa automaticamente con la fecha de creación del archivo (todavía no implementado al 19/01/2026)
 fijado: Se muestra en home resaltado
 author: <Quien escribe la entrada>
 description: <Resumen de contenido>
@@ -60,6 +60,8 @@ image::github-actions.gif[]
 
 ## ⚙️ Cómo funciona
 
+xref:.docs/estructura.adoc[Detalle de estructura de proyecto]
+
 Yamblg utiliza una arquitectura de SSG.
 
 * **YAML para el contenido:** No hay bases de datos. Todo el contenido y la configuración viven en archivos de texto plano fáciles de leer.
@@ -71,4 +73,6 @@ Desarrollado para la simplicidad. Desarollado para la comunidad. 💖 &#13;
 **¡Go publish!**
 
 [.small]
-Ultima Actualizacion del documento: &#13; {fecha}
+Ultima Actualizacion del documento:
+&#13;
+{fecha}

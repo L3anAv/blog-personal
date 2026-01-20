@@ -1,0 +1,75 @@
+= Estructura de YAMBLG
+:imagesdir: assets
+:icons: font
+
+[.text-center]
+image:https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square[Status] image:https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white[Go Version] image:https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white[Config] image:https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square[Version]
+
+== Arquitectura
+
+El siguiente recuadro describe cómo `main.go` procesa los archivos de entrada para generar el sitio final:
+
+[plantuml, architecture-diagram, png]
+----
+content --> Proveen la información
+layout --> Estructura base (links a .css, etc)
+pages --> layout de cada pagina se inyectan en layout
+components --> pequeñas estructura reutilizables
+styles --> estilos de todo el sitio
+main.go --> orquestador del sitio
+builder --> archivos para generar el directorio /public
+----
+
+== Estructura del directorio /public
+
+[plantuml, architecture-diagram]
+----
+public:
+├──/assets
+├──/style
+├──/carpeta por cada pagina distinta del index.html
+│  └── index.html
+└──/post
+│  └──/(titulo del post)
+│     └──index.html
+└── index.html
+----
+
+== 📂 Estructura de Directorios
+
+[source,text]
+----
+YAMBLG/
+├── .github/           # Workflows y configuración de GitHub
+├── assets/            # Recursos estáticos (Imágenes y archivos referidos)
+├── builder/           # Lógica interna de construcción del sitio
+├── components/        # Fragmentos HTML reutilizables (botones, nav, etc.)
+├── content/           # Archivos .yaml con la data de los posts/entradas
+├── font/              # Tipografías del sitio
+├── layout/            # Plantilla base (index.html) que envuelve todo el sitio
+├── pages/             # Vistas principales:
+│   ├── home           # Portada del blog
+│   ├── lista-de-posteos # Listado general de todos los post
+│   └── post           # Vista individual de entrada
+├── style/             # Archivos .css para el diseño visual
+├── config.yaml        # Configuración global del generador
+└── main.go            # Orquestador principal del proyecto
+----
+
+== ⚙️ Proceso de Construcción
+
+[IMPORTANT]
+====
+El archivo `main.go` es el punto de entrada. Su función es leer los archivos de la carpeta `content/`, procesar la lógica de negocio en `builder/` y aplicar las plantillas de `pages/` sobre el `index.html` del `layout/`.
+====
+
+1. **Lectura de Datos:** Se extrae la información de los archivos `.yaml` en `content/`.
+2. **Composición de Plantillas:**
+   * Las `pages` utilizan a `layout/index.html` como contenedor principal.
+   * Se insertan los `components` necesarios dentro de cada página.
+3. **Inyección de Estilos:** Se vinculan los archivos en `style/` y fuentes en `font/`.
+4. **Generación:** El resultado final es un sitio web estático listo para ser desplegado.
+
+'''
+[.text-right]
+_Última actualización: {docdate}_
