@@ -39,7 +39,7 @@ author: <Quien escribe la entrada>
 description: <Resumen de contenido>
 body: <Contenido de la entrada>
 
-.Ejemplo:
+.Ejemplo ("03-01-2025.yaml"):
 [source,yalm]
 title: "Hola, Bienvenido a Yamblg!"
 date: "03-01-2025"
