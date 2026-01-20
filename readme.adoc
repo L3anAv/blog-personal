@@ -57,8 +57,10 @@ Espero que te sea de utilidad el mini proyecto."
 ifdef::env-github[]
 ++++
 <details>
-  <summary>Muestra de donde esta la configuración</summary>
-image::github-actions.gif[]
+  <summary>📸 Muestra de donde está la configuración</summary>
+++++
+image::github-actions.gif[Configuración de Actions]
+++++
 </details>
 ++++
 endif::[]
