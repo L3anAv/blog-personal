@@ -1,7 +1,7 @@
 [comment]
 Author !Leandro Avila leandroav.dev@gmail.com
 
-:fecha: 19/01/2026
+:fecha: 20/01/2026
 
 ifdef::env-github[]
 ++++
@@ -54,7 +54,26 @@ Espero que te sea de utilidad el mini proyecto."
 **¡OJO!** En los ajustes de tu repositorio, ve a PAGES y activa *GitHub Pages* con la opcion de **Github Actions**.
 ====
 
+ifdef::env-github[]
+++++
+<details>
+  <summary>Muestra de donde esta la configuración</summary>
 image::github-actions.gif[]
+</details>
+++++
+endif::[]
+
+=== Configurar config.yaml
+
+[source,yalm]
+baseUrl: "/Yamblg" -> Nombre del repositorio
+siteTitle: "Yamblg | Crea tu blog rápidamente" -> Título del blog
+useSectionPost: -> Usar sección últimos posts
+    active: true -> true | false
+    limitOfPost: 5 -> numero de posts
+    method: "Latest" -> metodo de filtrado
+usePinned: -> Mostar post fijados solamente
+    active: true -> true | false
 
 ## ⚙️ Cómo funciona
 
@@ -70,7 +89,6 @@ Desarrollado para la simplicidad. Desarollado para la comunidad. 💖 &#13;
 
 **¡Go publish!**
 
-[.small]
-Ultima Actualizacion del documento:
-&#13;
+Última Actualización de documento:
 {fecha}
+

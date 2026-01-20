@@ -1,7 +1,10 @@
 # Config
 baseUrl: "/Yamblg"
 siteTitle: "Yamblg | Crea tu blog rápidamente"
-usePinned:
-    active: false
+useSectionPost:
+    active: true
     limitOfPost: 5
     method: "Latest"
+usePinned:
+    active: true
+    

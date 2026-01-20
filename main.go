@@ -5,6 +5,7 @@ import (
 	"io"
 	"fmt"
 	"log"
+	"strconv"
 	"path/filepath"
 	
 	"yamblg/builder"
@@ -52,7 +53,7 @@ func main() {
 		log.Fatalf("Error cargando posts: %v", err)
 	}
 	
-	limitePosts := min(len(allPosts), cfg.UsePinned.LimitOfPost)
+	limitePosts := min(len(allPosts), cfg.UseSectionPost.LimitOfPost)
 	
 // 2. Limpieza y preparación
 	os.RemoveAll("public")
@@ -66,7 +67,7 @@ func main() {
 	builder.MinifyCSS()
 
 // 3. Procesar Posts del blog
-	b.BuildPosts(cfg.BaseURL, allPosts)
+	b.BuildPosts(cfg.BaseURL, allPosts, cfg.UsePinned.Active)
 	
 // 4. Renderizado de .html globales
 	
@@ -75,7 +76,10 @@ func main() {
 		"BaseURL": cfg.BaseURL,
 		"Title": cfg.SiteTitle,
 		"Posts":   allPosts,
+		"ActiveLasted": cfg.UseSectionPost.Active,
+		"ActivePinned": cfg.UsePinned.Active,
 		"Latest":  allPosts[:limitePosts],
+		"CantPost": strconv.Itoa(limitePosts),
 	}
 
 	// 4.2 Creando los .html

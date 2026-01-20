@@ -109,7 +109,7 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
     }, nil
 }
 
-func (b *Builder) BuildPosts(baseUrl string, allPosts []Post) {
+func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool) {
 	
 	// 3.2 Recorrer y renderizar los posts
 	for i := range allPosts {
@@ -125,6 +125,7 @@ func (b *Builder) BuildPosts(baseUrl string, allPosts []Post) {
 		postData := map[string]any{
 			"BaseURL": baseUrl,
 			"Post": post, // Pasamos el puntero o el valor (*post)
+            "ActivePinned": active,
 		}
 		
 		// Generamos el archivo físico (ej: public/post/mi-titulo.html)

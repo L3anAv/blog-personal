@@ -10,10 +10,13 @@ import (
 type Config struct {
 	BaseURL   string `yaml:"baseUrl"`
 	SiteTitle string `yaml:"siteTitle"`
-	UsePinned struct {
+	UseSectionPost struct {
 		Active      bool   `yaml:"active"`
 		LimitOfPost int    `yaml:"limitOfPost"`
 		Method      string `yaml:"method"`
+	} `yaml:"useSectionPost"`
+    UsePinned struct {
+		Active      bool   `yaml:"active"`
 	} `yaml:"usePinned"`
 }
 

@@ -1,6 +1,7 @@
 = Estructura de YAMBLG
 :imagesdir: assets
 :icons: font
+:fecha: 19/01/2025
 
 [.text-center]
 image:https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square[Status] image:https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white[Go Version] image:https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white[Config] image:https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square[Version]
@@ -72,4 +73,4 @@ El archivo `main.go` es el punto de entrada. Su función es leer los archivos de
 
 '''
 [.text-right]
-_Última actualización: {docdate}_
+_Última actualización: {fecha}_
