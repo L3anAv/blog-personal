@@ -33,7 +33,8 @@ Tener tu blog es tan sencillo como seguir estos tres pasos:
 
 [source,text]
 title: <Nombre de la entrada>
-date: Completa automaticamente con la fecha de creación del archivo (todavía no implementado al 19/01/2026)
+date: Completa automaticamente con la fecha de creación del archivo 
+(todavía no implementado al 19/01/2026)
 fijado: Se muestra en home resaltado
 author: <Quien escribe la entrada>
 description: <Resumen de contenido>
