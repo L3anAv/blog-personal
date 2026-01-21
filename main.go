@@ -33,7 +33,7 @@ func copyRoute(src, dst string) error {
 
 func main() {
 
-// 1. Obtener datos para crear .htmls
+// Obtener datos para crear .htmls
 	cfg, err := builder.LoadConfig()
 	if err != nil {
         log.Fatal(err)
@@ -55,21 +55,34 @@ func main() {
 	
 	limitePosts := min(len(allPosts), cfg.UseSectionPost.LimitOfPost)
 	
-// 2. Limpieza y preparación
+//  Limpieza y preparación
 	os.RemoveAll("public")
 	os.MkdirAll("public", 0755)
 	os.MkdirAll("public/style", 0755)
 
+	//Copiar robots.txt
+	origen, _ := os.Open("robots.txt") 
+	defer origen.Close()
+
+	destino, _ := os.Create("public/robots.txt")
+	defer destino.Close()
+
+	io.Copy(destino, origen)
+
 	// Antes de copiar
 	copyRoute("assets", "public/assets")
-
+	
 	//Minificar CSS
 	builder.MinifyCSS()
-
-// 3. Procesar Posts del blog
-	b.BuildPosts(cfg.BaseURL, allPosts, cfg.UsePinned.Active)
 	
-// 4. Renderizado de .html globales
+	//  Procesar Posts del blog
+	b.BuildPosts(cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl)
+	
+	// Crear rss y sitemap
+	builder.GenerateSitemap(allPosts,cfg.UserUrl,cfg.BaseURL)
+	builder.GenerateRSS(allPosts, cfg.BaseURL)
+
+//  Renderizado de .html globales
 	
 	// 4.1 Pasando data para los tmpl
 	PagesData := map[string]any{
@@ -107,7 +120,7 @@ func main() {
         fmt.Printf("✓ Página generada: %s\n", result.FolderName)
     }
 
-// 5. Logs de terminal para verificar
+// Logs de terminal para verificar
 	fmt.Println("🚀 Sitio generado con éxito en /public")
 	fmt.Printf("📂 Posts en: public/post/\n")
 	fmt.Printf("📄 Páginas en: public/\n")

@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+    UserUrl   string `yaml:"userUrl"`
 	BaseURL   string `yaml:"baseUrl"`
 	SiteTitle string `yaml:"siteTitle"`
 	UseSectionPost struct {

@@ -1,13 +1,20 @@
 package builder
 
 import (
+    "os"
 	"fmt"
 	"bytes"
+    "time"
 	"regexp"
 	"strings"
 	"html/template"
 	"path/filepath"
 
+    // RSS
+    "github.com/snabb/sitemap"
+    "github.com/gorilla/feeds"
+
+    // Minificacion
 	"github.com/tdewolff/minify/v2"
     "github.com/tdewolff/minify/v2/html"
 )
@@ -65,6 +72,67 @@ func (b *Builder) InitTemplates() ([]string, error) {
     return pageNames, nil
 }
 
+func GenerateSitemap(posts []Post, UrlUser string, BaseUrl string) {
+    sm := sitemap.New()
+    
+    // Añadir la home
+    sm.Add(&sitemap.URL{
+        Loc:      UrlUser + BaseUrl,
+        Priority: 1.0,
+    })
+    
+    layout := "2006-01-02"
+   
+    // Añadir tus posts
+    for _, p := range posts {
+        
+        t, _ := time.Parse(layout, p.Date)
+
+        sm.Add(&sitemap.URL{
+            Loc:        p.FullLink,
+            LastMod:    &t, // Usa tu fecha de creación
+            ChangeFreq: sitemap.Weekly,
+        })
+    }
+
+    f, _ := os.Create("public/sitemap.xml")
+    sm.WriteTo(f)
+}
+
+func GenerateRSS(posts []Post, baseUrl string) {
+    now := time.Now()
+    feed := &feeds.Feed{
+        Title:       "Mi Blog",
+        Link:        &feeds.Link{Href: baseUrl},
+        Description: "Descripción de mi blog",
+        Created:     now,
+    }
+
+    layout := "2006-01-02"
+
+    for _, p := range posts {
+        // Parseamos el string a objeto time.Time
+        t, err := time.Parse(layout, p.Date)
+        if err != nil {
+            // Si el YAML no tiene fecha o el formato falla, usamos la hora actual
+            t = time.Now() 
+        }
+
+        item := &feeds.Item{
+            Title:       p.Title,
+            Link:        &feeds.Link{Href: p.FullLink},
+            Description: p.Description,
+            Author:      &feeds.Author{Name: p.Author},
+            Created:     t, // <--- QUITA EL & AQUÍ. RSS usa valor, no puntero.
+        }
+        feed.Items = append(feed.Items, item)
+    }
+
+    f, _ := os.Create("public/index.xml")
+    defer f.Close() // Buena práctica cerrar el archivo
+    feed.WriteRss(f)
+}
+
 func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, error) {
 
     // 1. Clonamos la base (Layout + Componentes) que ya está en memoria
@@ -109,7 +177,7 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
     }, nil
 }
 
-func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool) {
+func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool, userUrl string) {
 	
 	// 3.2 Recorrer y renderizar los posts
 	for i := range allPosts {
@@ -118,8 +186,11 @@ func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool) {
 
 		// Nombre de la carpeta dentro de post
 		RouteNamePost := slugify(post.Title)
-		
+        
+        //Definiendo rutas
+        post.UrlUser = userUrl
 		post.Link = "post/" + RouteNamePost + "/"
+        post.FullLink = userUrl + baseUrl + "/" + post.Link
 
 		// Preparamos los datos para el template
 		postData := map[string]any{

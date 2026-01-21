@@ -29,12 +29,12 @@ Tener tu blog es tan sencillo como seguir estos tres pasos:
 * **Configura:** Crea archivos del estilo `{name}.yaml` (el {name} se utiliza en tal caso de que title sea vacío). El archivo se crea siguiendo la siguiente estructura:
 
 [source,text]
-title: <Nombre de la entrada>
-date: Completa automaticamente con la fecha de creación del archivo 
+title: <Titulo de la entrada de blog>
+date: Completa automaticamente con la fecha de creación del archivo.
 (todavía no implementado al 19/01/2026)
-fijado: Se muestra en home resaltado
+fijado: true | false -> Se muestra en home resaltado. 
 author: <Quien escribe la entrada>
-description: <Resumen de contenido>
+description: <Resumen de contenido de la entrada>
 body: <Contenido de la entrada>
 
 .Ejemplo del archivo "03-01-2025.yaml":
@@ -68,13 +68,13 @@ endif::[]
 === Configurar config.yaml
 
 [source,yalm]
-baseUrl: "/Yamblg" -> Nombre del repositorio
-siteTitle: "Yamblg | Crea tu blog rápidamente" -> Título del blog
-useSectionPost: -> Usar sección últimos posts
-    active: true -> true | false
-    limitOfPost: 5 -> numero de posts
-    method: "Latest" -> metodo de filtrado
-usePinned: -> Mostar post fijados solamente
+baseUrl: "/Yamblg" -> Nombre del repositorio.
+siteTitle: "Yamblg | Crea tu blog rápidamente" -> Título del blog.
+useSectionPost: -> Usar la sección últimos posts.
+    active: true -> true | false -> activo o desactivado
+    limitOfPost: 5 -> Cantidad de posts mostrados
+    method: "Latest" -> Metodo de muestreo de posts. (Todavía no implementado)
+usePinned: -> Mostar post fijados solamente en incio. (si es false, se muestran todos)
     active: true -> true | false
 
 ## ⚙️ Cómo funciona

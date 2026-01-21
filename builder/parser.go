@@ -17,6 +17,8 @@ type Post struct {
 	Description string `yaml:"description"`
 	Fijado      bool   `yaml:"fijado"`
 	Link        string
+    FullLink    string
+    UrlUser     string
 }
 
 func LoadPosts() ([]Post, error) {
