@@ -76,11 +76,11 @@ func main() {
 	builder.MinifyCSS()
 	
 	//  Procesar Posts del blog
-	b.BuildPosts(cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl)
+	b.BuildPosts(cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl, cfg.Email)
 	
 	// Crear rss y sitemap
 	builder.GenerateSitemap(allPosts,cfg.UserUrl,cfg.BaseURL)
-	builder.GenerateRSS(allPosts,cfg.UserUrl,cfg.BaseURL, cfg.SiteTitle)
+	builder.GenerateRSS(allPosts,cfg.UserUrl,cfg.BaseURL, cfg.SiteTitle, allPosts[0].Author, cfg.Email)
 
 //  Renderizado de .html globales
 	

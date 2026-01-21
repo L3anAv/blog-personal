@@ -11,6 +11,7 @@ type Config struct {
     UserUrl   string `yaml:"userUrl"`
 	BaseURL   string `yaml:"baseUrl"`
 	SiteTitle string `yaml:"siteTitle"`
+    Email     string `yaml:"email"`
 	UseSectionPost struct {
 		Active      bool   `yaml:"active"`
 		LimitOfPost int    `yaml:"limitOfPost"`

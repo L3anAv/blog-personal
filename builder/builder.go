@@ -3,8 +3,9 @@ package builder
 import (
     "os"
 	"fmt"
-	"bytes"
+    "log"
     "time"
+	"bytes"
 	"regexp"
 	"strings"
 	"html/template"
@@ -99,13 +100,14 @@ func GenerateSitemap(posts []Post, UrlUser string, BaseUrl string) {
     sm.WriteTo(f)
 }
 
-func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string) {
-    now := time.Now()
+func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string, author string, email string) {
+
     feed := &feeds.Feed{
-        Title:       baseUrl,
-        Link:        &feeds.Link{Href: UrlUser + baseUrl},
+        Title:       descrp,
+        Link:        &feeds.Link{Href: UrlUser + baseUrl + "/index.xml"},
         Description: descrp,
-        Created:     now,
+        Author: &feeds.Author{Name: author, Email: email},
+        Created:     time.Now(),
     }
 
     layout := "2006-01-02"
@@ -121,15 +123,20 @@ func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string) {
         item := &feeds.Item{
             Title:       p.Title,
             Link:        &feeds.Link{Href: p.FullLink},
+            Id: p.FullLink,
             Description: p.Description,
-            Author:      &feeds.Author{Name: p.Author},
+            Author:      &feeds.Author{Name: p.Author, Email: p.Email},
             Created:     t, // <--- QUITA EL & AQUÍ. RSS usa valor, no puntero.
         }
         feed.Items = append(feed.Items, item)
     }
 
-    f, _ := os.Create("public/index.xml")
-    defer f.Close() // Buena práctica cerrar el archivo
+    f, err := os.Create("public/index.xml")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer f.Close()
+    
     feed.WriteRss(f)
 }
 
@@ -177,7 +184,7 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
     }, nil
 }
 
-func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool, userUrl string) {
+func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool, userUrl string, emailDir string) {
 	
 	// 3.2 Recorrer y renderizar los posts
 	for i := range allPosts {
@@ -191,6 +198,9 @@ func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool, userU
         post.UrlUser = userUrl
 		post.Link = "post/" + RouteNamePost + "/"
         post.FullLink = userUrl + baseUrl + "/" + post.Link
+
+        //Email
+        post.Email = emailDir
 
 		// Preparamos los datos para el template
 		postData := map[string]any{

@@ -13,6 +13,7 @@ type Post struct {
 	Title       string `yaml:"title"`
 	Date        string `yaml:"date"`
 	Author      string `yaml:"author"`
+    Email       string `yaml:"email"`
 	Body        string `yaml:"body"`
 	Description string `yaml:"description"`
 	Fijado      bool   `yaml:"fijado"`
