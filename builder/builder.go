@@ -104,11 +104,12 @@ func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string, au
 
     feed := &feeds.Feed{
         Title:       descrp,
-        Link:        &feeds.Link{Href: UrlUser + baseUrl + "/index.xml"},
+        Link:        &feeds.Link{Href: UrlUser + baseUrl},
         Description: descrp,
         Author: &feeds.Author{Name: author, Email: email},
         Created:     time.Now(),
     }
+
 
     layout := "2006-01-02"
 
@@ -119,7 +120,7 @@ func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string, au
             // Si el YAML no tiene fecha o el formato falla, usamos la hora actual
             t = time.Now() 
         }
-
+        
         item := &feeds.Item{
             Title:       p.Title,
             Link:        &feeds.Link{Href: p.FullLink},
@@ -131,13 +132,34 @@ func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string, au
         feed.Items = append(feed.Items, item)
     }
 
-    f, err := os.Create("public/index.xml")
+    // 1. Generamos el contenido XML en un string usando ToRss()
+    // Esto es necesario para poder editar las etiquetas que faltan
+    atomString, err := feed.ToAtom()
     if err != nil {
-        log.Fatal(err)
+        log.Fatal("Error generando el string RSS:", err)
     }
-    defer f.Close()
     
-    feed.WriteRss(f)
+    // 2. Definimos la URL de auto-referencia
+    fullFeedURL := UrlUser + baseUrl + "/index.xml"
+    
+    // 3. Preparamos la etiqueta de auto-referencia obligatoria para Atom
+    // Se debe colocar dentro del bloque principal <feed>
+    atomSelfLink := fmt.Sprintf("\n  <link href=\"%s\" rel=\"self\" type=\"application/atom+xml\"></link>", fullFeedURL)
+
+    // 4. Inyectamos la etiqueta justo después del subtítulo o el título
+    // Buscamos el tag <subtitle> para pegar el link debajo
+    if strings.Contains(atomString, "</subtitle>") {
+        atomString = strings.Replace(atomString, "</subtitle>", "</subtitle>"+atomSelfLink, 1)
+    } else {
+        // Si no hay subtítulo, lo ponemos debajo del <title>
+        atomString = strings.Replace(atomString, "</title>", "</title>"+atomSelfLink, 1)
+    }
+    
+    // 5. Ahora guardamos el string final en el archivo físico
+    err = os.WriteFile("public/index.xml", []byte(atomString), 0644)
+    if err != nil {
+        log.Fatal("Error escribiendo el archivo index.xml:", err)
+    }
 }
 
 func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, error) {
