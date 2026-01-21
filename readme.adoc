@@ -19,6 +19,7 @@ image:https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square[S
 image:https://img.shields.io/badge/go-v1.25+-00ADD8?style=flat-square&logo=go&logoColor=white[Go Version]
 image:https://img.shields.io/badge/Config-YAML-red?style=flat-square&logo=yaml&logoColor=white[Config]
 image:https://img.shields.io/badge/Version-0.0.30-blue?style=flat-square[Version]
+image:https://img.shields.io/badge/RSS-Feed-orange?style=flat-square&logo=rss[RSS Feed, link="https://l3anav.github.io/Yamblg/index.xml"]
 
 == 🛠️ [.underline]#¿Cómo se usa?#
 
