@@ -39,6 +39,12 @@ func main() {
         log.Fatal(err)
     }
 
+//Configuracion de yaml`s
+	err = builder.ConfigYaml()
+	if err != nil {
+        log.Fatal(err)
+    }
+
 	// Instancia
 	b := &builder.Builder{}
 	

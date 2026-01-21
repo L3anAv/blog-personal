@@ -25,7 +25,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5 # Actualizado a v5
         with:
-          go-version: '1.21'
+          go-version: '1.25'
 
       - name: Install dependencies
         run: go mod download
@@ -34,7 +34,7 @@ jobs:
         run: go run main.go
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3 # <--- ESTA ES LA CLAVE (v3 es la actual para Pages)
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
 
@@ -47,4 +47,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 # <--- Actualizado a v4
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,6 @@
+title: Archivo de prueba para fecha automatica
+fijado: false
+date: ""
+author: Leandro Avila
+body: Esta entrada esta creada para validar, si el builder coloca las fechas automaticamente si no encuentra fecha o si no existe directamente el date dentro del archivo yaml. Si lo ves dentro del blog esto quiere decir, que se cumplió lo que se esperaba.
+description: Este post esta creado para ver si funciona correctamente el autocompletado de fechas.
