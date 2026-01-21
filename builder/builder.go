@@ -99,12 +99,12 @@ func GenerateSitemap(posts []Post, UrlUser string, BaseUrl string) {
     sm.WriteTo(f)
 }
 
-func GenerateRSS(posts []Post, baseUrl string) {
+func GenerateRSS(posts []Post, UrlUser string, baseUrl string, descrp string) {
     now := time.Now()
     feed := &feeds.Feed{
-        Title:       "Mi Blog",
-        Link:        &feeds.Link{Href: baseUrl},
-        Description: "Descripción de mi blog",
+        Title:       baseUrl,
+        Link:        &feeds.Link{Href: UrlUser + baseUrl},
+        Description: descrp,
         Created:     now,
     }
 

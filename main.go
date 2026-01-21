@@ -80,7 +80,7 @@ func main() {
 	
 	// Crear rss y sitemap
 	builder.GenerateSitemap(allPosts,cfg.UserUrl,cfg.BaseURL)
-	builder.GenerateRSS(allPosts, cfg.BaseURL)
+	builder.GenerateRSS(allPosts,cfg.UserUrl,cfg.BaseURL, cfg.SiteTitle)
 
 //  Renderizado de .html globales
 	
