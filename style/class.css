@@ -240,6 +240,7 @@
   .post-body *{
     background:var(--bg-box)
   }
+  
   .post-body p{
     margin:12px;
   }

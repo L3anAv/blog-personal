@@ -21,7 +21,7 @@ body: |
 
   <p>
     * <strong>Explora el código:</strong> <a href="https://github.com/L3anAv/Yamblg">Repositorio en GitHub</a> – Échale un vistazo al motor de renderizado y a la lógica de procesamiento de los YAMLs.<br>
-    * <strong>La gran pregunta:</strong> <a href="https://github.com/L3anAv/Yamblg/post/por-qu-hacer-un-mini-ssg">¿Por qué crear un mini SSG desde cero?</a> – En este post explico las razones personales y técnicas que me llevaron a ignorar las opciones populares y construir mi propia herramienta.
+    * <strong>La gran pregunta:</strong> <a href="https://l3anav.github.io/Yamblg/post/por-qu-hacer-un-mini-ssg/">¿Por qué crear un mini SSG desde cero?</a> – En este post explico las razones personales y técnicas que me llevaron a ignorar las opciones populares y construir mi propia herramienta.
   </p>
 
   <h3>¿Qué sigue?</h3>
