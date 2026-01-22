@@ -81,6 +81,14 @@ usePinned: -> Mostar post fijados solamente en incio. (si es false, se muestran 
 
 xref:.docs/estructura.adoc[Detalle de estructura de proyecto]
 
+ifdef::env-github[]
+++++
+<p align="center">
+  <img src="arq.png" alt="Yamblg Logo" width="max-content">
+</p>
+++++
+endif::[]
+
 Yamblg utiliza una arquitectura de SSG.
 
 * **YAML para el contenido:** No hay bases de datos. Todo el contenido y la configuración viven en archivos de texto plano fáciles de leer.
