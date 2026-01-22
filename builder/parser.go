@@ -4,6 +4,7 @@ import (
     "fmt"
     "os"
 	"strings"
+    "html/template"
     "path/filepath"
 
     "gopkg.in/yaml.v3" 
@@ -56,4 +57,8 @@ func LoadPosts() ([]Post, error) {
     }
 
     return posts, nil
+}
+
+func (p Post) ContentBody() template.HTML {
+    return template.HTML(p.Body)
 }

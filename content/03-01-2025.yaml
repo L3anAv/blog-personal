@@ -1,0 +1,31 @@
+author: Leandro Avila
+date: "03-01-2025"
+description: Primer post creado para mostrar en la demo.
+fijado: false
+title: Hola, Bienvenido a Yamblg!
+body: | 
+
+  <h3>¡Bienvenido a Yamblg! 🚀</h3>
+
+  <p>¡Hola! Si estás leyendo esto, estás viendo la <strong>demo oficial de Yamblg</strong>, el generador de sitios estáticos (SSG) que he estado construyendo.</p>
+
+  <p>Este sitio no es solo una prueba de concepto; es la demostración real de cómo estructuras de datos simples pueden transformarse en una web funcional y rápida. A diferencia de la mayoría de los SSGs modernos que dependen de archivos Markdown, <strong>Yamblg utiliza archivos YAML</strong> para gestionar todo el contenido.</p>
+
+  <h3>¿Qué hace especial a Yamblg?</h3>
+
+  <p>La idea principal era crear algo minimalista pero estructurado. Al usar YAML, el contenido se siente más como una base de datos legible que como un documento de texto simple, lo que permite una organización de metadatos mucho más limpia.</p>
+
+  <h3>Enlaces importantes</h3>
+
+  <p>Si tienes curiosidad por ver cómo funciona "bajo el capó" o quieres entender la filosofía detrás de este proyecto, aquí tienes los accesos directos:</p>
+
+  <p>
+    * <strong>Explora el código:</strong> <a href="https://github.com/L3anAv/Yamblg">Repositorio en GitHub</a> – Échale un vistazo al motor de renderizado y a la lógica de procesamiento de los YAMLs.<br>
+    * <strong>La gran pregunta:</strong> <a href="https://github.com/L3anAv/Yamblg/post/por-qu-hacer-un-mini-ssg">¿Por qué crear un mini SSG desde cero?</a> – En este post explico las razones personales y técnicas que me llevaron a ignorar las opciones populares y construir mi propia herramienta.
+  </p>
+
+  <h3>¿Qué sigue?</h3>
+
+  <p>Este es solo el comienzo. Mi plan es seguir refinando la lógica de generación y añadir soporte para temas más complejos, siempre manteniendo la simplicidad del YAML como núcleo.</p>
+
+  <p>¡Gracias por pasar y formar parte de esta demo!</p>

@@ -9,7 +9,7 @@
   padding: 0;
 
   font-family:Verdana, sans-serif;
-  background-color: var(--bg-body);
+  background: var(--bg-body);
 }
 
 body{

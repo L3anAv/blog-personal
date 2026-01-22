@@ -207,11 +207,13 @@
   /* Tarjeta o borde del post */
   .post-card {
     padding: 2rem;
+    margin-top:30px;
+    margin-bottom:30px;
     background:var(--bg-box);
     border: 0.5px dashed #000;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   }
-
+  
   /* Títulos y textos */
   .post-title {
     color: #0663e9;
@@ -228,10 +230,31 @@
   }
 
   .post-body {
-    font-size: 1.1rem;
-    color: #2c3e50;
     padding:8px;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    text-align:justify;
     background:var(--bg-box);
+  }
+
+  .post-body *{
+    background:var(--bg-box)
+  }
+  .post-body p{
+    margin:12px;
+  }
+
+  .post-body h3{
+    margin-top:10px;
+    margin-bottom:10px;
+    text-decoration: underline;
+  }
+  .post-body img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    object-fit: cover;
+    object-position: center;
   }
 
 /* TABLA */

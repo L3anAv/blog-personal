@@ -1,0 +1,94 @@
+title: ¿Por qué hacer un mini SSG?
+fijado: true
+date: "05-01-2026"
+author: Leandro Avila
+description: Explico y detallo por que crear un mini SSG, pudiendo usar otras opciones del mercado.
+body: |
+
+  <p>Este proyecto no nació para competir con los grandes generadores de sitios estáticos (SSG) del mercado. Nació de una necesidad personal: <strong>resolver el problema de publicar un blog sin heredar la complejidad de herramientas modernas innecesarias.</strong></p>
+
+  <p style="text-align:center;">🧬Mi filosofía para el proyecto: Menos es Más</p>
+  
+  <h3 style="text-decoration: underline;">1. El rechazo a la complejidad innecesaria</h3>
+  <p>En lugar de lidiar con las reglas de formato de Markdown, que a veces pueden ser ambiguas, decidí usar <strong>YAML</strong>. ¿Por qué? Porque es puramente estructurado. Es data cruda que el motor toma y coloca en su lugar. No hay que "traducir" sintaxis complejas; solo es información fluyendo hacia una plantilla.</p>
+
+  <h3 style="text-decoration: underline;">2. Un blog sin el peso de JavaScript</h3>
+  <p>Hoy en día, la web parece no poder vivir sin <em>frameworks</em> pesados de JS. Sin embargo, recordé una premisa de <strong>Richard Stallman</strong>: la libertad de navegar con el JavaScript desactivado. Esto me inspiró a volver a las raíces.</p>
+  
+  <p style="background: #f0f0f0; padding: 15px; border-left: 10px solid #333; font-style: italic;">
+    "Mi idea era volver a lo simple: HTML y CSS puro. Un lugar donde entras, lees y te vas, sin que tu navegador tenga que ejecutar miles de líneas de código invisible."
+  </p>
+
+  <h3 style="text-decoration: underline;">3. El espíritu de los "Small Web"</h3>
+  <p>Este proyecto se alinea con movimientos como la <strong>Small Web</strong> o el <strong>Low-tech Web</strong>. Se trata de crear herramientas que "solo resuelvan", sin ser sofisticadas, pero siendo 100% funcionales. Al eliminar JS, el blog es:</p>
+  
+  <ul style="list-style-type: square;">
+    <li><strong>Universal:</strong> Se lee igual en un navegador de 1995 que en uno de 2026.</li>
+    <li><strong>Privado:</strong> No hay scripts rastreándote.</li>
+    <li><strong>Eficiente:</strong> La carga es instantánea porque el navegador solo tiene que renderizar texto y estilo.</li>
+  </ul>
+
+  <p style="margin-top: 20px; font-weight: bold; text-align: center; border-top: 1px solid #ddd; padding-top: 10px;">
+    Automatización real, plantillas directas y control total. Eso es todo lo que necesitaba.
+  </p>
+
+  <p>Este sitio es generado dinámicamente mediante un motor estático escrito en <strong>Go</strong>. Su función principal es transformar datos puros y plantillas modulares en un sitio web ligero, rápido y optimizado para la web moderna.</p>
+
+  <h3 style="color: #2c3e50;">🏗️ Arquitectura del Generador</h3>
+  
+  <p>El flujo de trabajo organiza las responsabilidades para que el diseño y el contenido vivan separados:</p>
+  
+  <ul style="list-style: none; padding-left: 0;">
+    <li style="margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px;"><strong>📄 Content:</strong> Archivos <code>.yaml</code> que actúan como la base de datos de cada post.</li>
+    <li style="margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px;"><strong>📐 Layout & Pages:</strong> Estructuras HTML base donde se inyecta el contenido dinámicamente.</li>
+    <li style="margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px;"><strong>🧩 Components:</strong> Bloques reutilizables (nav, footer, botones) para evitar código duplicado.</li>
+    <li style="margin-bottom: 10px; padding: 8px; background: #f8f9fa; border-radius: 4px;"><strong>🎼 Main.go:</strong> El núcleo que orquesta la lectura, el procesado y la exportación.</li>
+  </ul>
+
+  <h3 style="color: #2c3e50;">🚀 SEO y Sindicación Nativa</h3>
+  
+  <p>Para asegurar que el contenido sea fácilmente indexable por buscadores y accesible para lectores de noticias, el motor genera automáticamente dos archivos críticos durante el proceso de <em>build</em>:</p>
+
+  <div style="display: flex; gap: 20px; margin: 20px 0;">
+    <div style="flex: 1; border: 1px dashed #fb8c00; padding: 15px; border-radius: 6px; background-color: #fff9f0;">
+      <strong style="color: #e65100;">📡 Feed RSS:</strong> Permite que los usuarios se suscriban a las actualizaciones del blog mediante lectores de feeds.
+    </div>
+    <div style="flex: 1; border: 1px dashed #43a047; padding: 15px; border-radius: 6px; background-color: #f1f8f1;">
+      <strong style="color: #1b5e20;">🗺️ Sitemap:</strong> Un mapa XML detallado que ayuda a Google y otros motores de búsqueda a rastrear todas las páginas del sitio.
+    </div>
+  </div>
+
+  <h3 style="color: #2c3e50;">📂 Estructura del Directorio /public</h3>
+  
+  <p>El resultado final es un despliegue de archivos estáticos listo para cualquier servidor o para github pages:</p>
+  
+  <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+      <thead>
+        <tr style="background-color: #f1f3f4; text-align: left;">
+          <th style="padding: 12px; border: 1px solid #ddd;">Archivo / Carpeta</th>
+          <th style="padding: 12px; border: 1px solid #ddd;">Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><code>/post/(titulo)/index.html</code></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">Entradas del blog generadas desde plantillas.</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><code>/lista-de-posteos/index.html</code></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">Todas las entradas.</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><code>/sitemap.xml</code></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">Soporte nativo para SEO (Motores de búsqueda).</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><code>/index.xml</code></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">Soporte para <strong>RSS Feed</strong> (Sindicación).</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><code>/robots.txt</code></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">Instrucciones para rastreadores web.</td>
+        </tr>
+      </tbody>
+    </table>
