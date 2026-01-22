@@ -258,6 +258,56 @@
     object-position: center;
   }
 
+  /* Tus estilos base se mantienen igual arriba */
+
+@media (max-width: 768px) {
+
+    .ultimos-posts{
+
+    width: 100%;
+
+  }
+
+  .blog-container {
+      width: 90%;
+    }
+
+  .post-card {
+    width: 95%;          /* Ocupa el 95% del ancho */
+    margin-left: auto;   /* Centra la tarjeta horizontalmente */
+    margin-right: auto;
+    padding: 1.2rem;     /* Reducimos el padding interno para ganar espacio */
+    margin-top: 20px;    /* Margen un poco más pequeño en móvil */
+    margin-bottom: 20px;
+  }
+
+  .post-title {
+    font-size: 1.8rem;   /* Título más pequeño para que no rompa en muchas líneas */
+    text-align: center;  /* Opcional: centrar el título ayuda en móvil */
+  }
+
+  .post-meta {
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .post-body {
+    font-size: 1rem;     /* Texto ligeramente más pequeño para mejor flujo */
+    padding: 4px;        /* Menos espacio lateral */
+    text-align: left;    /* A veces el justify en móvil deja espacios raros (ríos de blanco) */
+  }
+
+  .post-body p {
+    margin: 8px 0;       /* Espaciado vertical entre párrafos */
+  }
+
+  .post-body img {
+    width: 100%;         /* Imágenes siempre al ancho completo del contenedor */
+    height: auto;
+  }
+}
+
 /* TABLA */
 
 /* Contenedor para scroll horizontal en móviles */
