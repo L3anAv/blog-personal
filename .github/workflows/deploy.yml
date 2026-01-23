@@ -31,7 +31,7 @@ jobs:
         run: go mod download
 
       - name: Build site
-        run: ggo run . build
+        run: go run . build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
