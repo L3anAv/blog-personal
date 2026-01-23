@@ -17,7 +17,7 @@ import (
 	"github.com/l3anav/yamblg/builder"
 )
 
-//go:embed template
+//go:embed all:template
 var initAssets embed.FS
 
 var (
