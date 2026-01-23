@@ -106,11 +106,9 @@ func MinifyCSS(fs afero.Fs) {
         Write:       false, // Sigues manejándolo tú en memoria
         Loader: map[string]api.Loader{
             ".css": api.LoaderCSS,
-            ".ttf": api.LoaderFile,
+            ".ttf": api.LoaderCopy,
         },
-        // Opcional: Esto evita que cree carpetas anidadas extrañas 
-        // y pone la fuente directo en public/style
-        AssetNames: "[name]", 
+        AssetNames: "[name]",
     })
 
     if len(result.Errors) > 0 {
