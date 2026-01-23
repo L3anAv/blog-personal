@@ -14,10 +14,10 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/fsnotify/fsnotify"
 	
-	"github.com/L3anAv/Yamblg/builder"
+	"github.com/l3anAv/yamblg/builder"
 )
 
-//go:embed components content font layout pages style config.yaml robots.txt
+//go:embed .github assets components content font layout pages style config.yaml robots.txt
 var initAssets embed.FS
 
 var (
