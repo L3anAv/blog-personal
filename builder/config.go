@@ -100,32 +100,32 @@ func fillDateIfEmpty(path string, info os.FileInfo) error {
 
 func MinifyCSS(fs afero.Fs) {
     result := api.Build(api.BuildOptions{
-        EntryPoints:       []string{"style/index.css"}, // Tu archivo principal
+        EntryPoints: []string{"style/index.css"},
         Outdir:      "public/style",
-		Bundle:            true,
-        MinifyWhitespace:  true,
-        MinifyIdentifiers: true,
-        MinifySyntax:      true,
-		Write:       false,
+        Bundle:      true,
+        Write:       false, // Sigues manejándolo tú en memoria
         Loader: map[string]api.Loader{
             ".css": api.LoaderCSS,
-			".ttf": api.LoaderFile,
+            ".ttf": api.LoaderFile,
         },
+        // Opcional: Esto evita que cree carpetas anidadas extrañas 
+        // y pone la fuente directo en public/style
+        AssetNames: "[name]", 
     })
 
     if len(result.Errors) > 0 {
         log.Fatalf("Error minificando CSS: %v", result.Errors)
     }
 
-    // esbuild devuelve un slice de 'OutputFiles' en memoria
     for _, file := range result.OutputFiles {
-        targetPath := "public/style/index.css" 
+        // USA file.Path en lugar de una cadena fija
+        // file.Path ya contiene "public/style/index.css" o "public/style/tu-fuente.ttf"
+        err := afero.WriteFile(fs, file.Path, file.Contents, 0644)
         
-        err := afero.WriteFile(fs, targetPath, file.Contents, 0644)
         if err != nil {
-            log.Printf("Error escribiendo CSS: %v", err)
+            log.Printf("Error escribiendo archivo %s: %v", file.Path, err)
         } else {
-            fmt.Println("✅ CSS minificado y guardado en:", targetPath)
+            fmt.Println("✅ Guardado:", file.Path)
         }
     }
 }
