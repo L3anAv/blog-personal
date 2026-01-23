@@ -1,4 +1,4 @@
-module github.com/l3anAv/yamblg
+module github.com/l3anav/yamblg
 
 go 1.25.4
 

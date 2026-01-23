@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/fsnotify/fsnotify"
 	
-	"github.com/l3anAv/yamblg/builder"
+	"github.com/l3anav/yamblg/builder"
 )
 
 //go:embed .github assets components content font layout pages style config.yaml robots.txt
