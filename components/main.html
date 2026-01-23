@@ -5,10 +5,10 @@
         <p>Últimos {{ .CantPost }} posteos</p>
         <ul>
             {{ range .Latest }}
-                    <li><a href="{{ $.BaseURL }}/{{ .Link }}">{{ .Title }}</a></li>
+                    <li><a href="{{ $.BaseURL }}{{ .Link }}">{{ .Title }}</a></li>
             {{ end }}
         </ul>
-            <a href="{{ $.BaseURL }}/lista-de-posteos">Ver todos los posteos</a>
+            <a href="{{ $.BaseURL }}lista-de-posteos">Ver todos los posteos</a>
 </section>
 {{end}}
 <section class="lista-posts">
@@ -18,11 +18,11 @@
         {{ if .Fijado }}
             <li>
                 <p>📌</p>
-                <a href="{{ $.BaseURL }}/{{ .Link }}">
+                <a href="{{ $.BaseURL }}{{ .Link }}">
                     <p>{{ .Title }}</p>
                 </a>
                 <p>{{ .Description }}</p>
-                <a href="{{ $.BaseURL }}/{{ .Link }}">
+                <a href="{{ $.BaseURL }}{{ .Link }}">
                     <button> Leer -></button>
                 </a>
                 <small style="display: block; background:#d3d2d0; padding:3px; text-align: center; margin-top: 12px; font-size: 13px; color: #666;">
@@ -32,11 +32,11 @@
         {{ end }}
     {{ else }}
         <li>
-            <a href="{{ $.BaseURL }}/{{ .Link }}">
+            <a href="{{ $.BaseURL }}{{ .Link }}">
                 <p>{{ .Title }}</p>
             </a>
             <p>{{ .Description }}</p>
-            <a href="{{ $.BaseURL }}/{{ .Link }}">
+            <a href="{{ $.BaseURL }}{{ .Link }}">
                 <button> Leer -></button>
             </a>
             <small style="display: block; background:#d3d2d0; padding:3px; text-align: center; margin-top: 12px; font-size: 13px; color: #666;">

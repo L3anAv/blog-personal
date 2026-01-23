@@ -3,9 +3,14 @@ package builder
 import (
     "os"
 	"fmt"
+	"log"
     "strings"
     "path/filepath"
     "gopkg.in/yaml.v3"
+	
+	// Sistema de guardado
+    "github.com/spf13/afero"
+
 	"github.com/evanw/esbuild/pkg/api"
 )
 
@@ -17,7 +22,6 @@ type Config struct {
 	UseSectionPost struct {
 		Active      bool   `yaml:"active"`
 		LimitOfPost int    `yaml:"limitOfPost"`
-		Method      string `yaml:"method"`
 	} `yaml:"useSectionPost"`
     UsePinned struct {
 		Active      bool   `yaml:"active"`
@@ -94,15 +98,15 @@ func fillDateIfEmpty(path string, info os.FileInfo) error {
 	return nil
 }
 
-func MinifyCSS() {
+func MinifyCSS(fs afero.Fs) {
     result := api.Build(api.BuildOptions{
         EntryPoints:       []string{"style/index.css"}, // Tu archivo principal
-        Outfile:           "public/style/index.css",
-        Bundle:            true,
+        Outdir:      "public/style",
+		Bundle:            true,
         MinifyWhitespace:  true,
         MinifyIdentifiers: true,
         MinifySyntax:      true,
-		Write:            true,
+		Write:       false,
         Loader: map[string]api.Loader{
             ".css": api.LoaderCSS,
 			".ttf": api.LoaderFile,
@@ -110,8 +114,18 @@ func MinifyCSS() {
     })
 
     if len(result.Errors) > 0 {
-        fmt.Printf("Error minificando CSS: %v\n", result.Errors)
-    }else {
-        fmt.Println("✓ CSS minificado con éxito")
+        log.Fatalf("Error minificando CSS: %v", result.Errors)
+    }
+
+    // esbuild devuelve un slice de 'OutputFiles' en memoria
+    for _, file := range result.OutputFiles {
+        targetPath := "public/style/index.css" 
+        
+        err := afero.WriteFile(fs, targetPath, file.Contents, 0644)
+        if err != nil {
+            log.Printf("Error escribiendo CSS: %v", err)
+        } else {
+            fmt.Println("✅ CSS minificado y guardado en:", targetPath)
+        }
     }
 }

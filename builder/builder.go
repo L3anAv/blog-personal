@@ -2,19 +2,24 @@ package builder
 
 import (
     "os"
+    "io"
 	"fmt"
     "log"
     "time"
 	"bytes"
 	"regexp"
+    "strconv"
 	"strings"
 	"html/template"
 	"path/filepath"
 
+    // Sistema de guardado
+    "github.com/spf13/afero"
+    
     // RSS
     "github.com/snabb/sitemap"
     "github.com/gorilla/feeds"
-
+    
     // Minificacion
 	"github.com/tdewolff/minify/v2"
     "github.com/tdewolff/minify/v2/html"
@@ -30,11 +35,141 @@ type RenderResult struct {
     Content    []byte
 }
 
+// Función para copiar archivos (assets, estilos, etc.)
+func copyRoute(fs afero.Fs,src, dst string) error {
+	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		relPath, _ := filepath.Rel(src, path)
+		targetPath := filepath.Join(dst, relPath)
+		if info.IsDir() {
+			return fs.MkdirAll(targetPath, info.Mode())
+		}
+		srcFile, _ := os.Open(path)
+		defer srcFile.Close()
+		dstFile, _ := fs.Create(targetPath)
+		defer dstFile.Close()
+		_, err = io.Copy(dstFile, srcFile)
+		return err
+	})
+}
+
 func slugify(s string) string {
 	s = strings.ToLower(s)
 	reg := regexp.MustCompile("[^a-z0-9]+")
 	s = reg.ReplaceAllString(s, "-")
 	return strings.Trim(s, "-")
+}
+
+func RunBuild(fs afero.Fs, isDev bool) {
+    cfg, err := LoadConfig()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    if isDev {
+        cfg.BaseURL = "/"
+    }
+
+    err = ConfigYaml()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    b := &Builder{}
+    paginasDetectadas, err := b.InitTemplates()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    allPosts, err := LoadPosts()
+    if err != nil {
+        log.Fatalf("Error cargando posts: %v", err)
+    }
+    
+    limitePosts := min(len(allPosts), cfg.UseSectionPost.LimitOfPost)
+    
+    if !isDev {
+    fs.RemoveAll("public")
+    }
+    
+    fs.MkdirAll("public", 0755)
+    fs.MkdirAll("public/style", 0755)
+    
+    MinifyCSS(fs)
+    
+    // Solo generar archivos de producción si no es MemMapFS
+    if !isDev {
+        origen, _ := os.Open("robots.txt") 
+        if origen != nil {
+            defer origen.Close()
+            destino, _ := fs.Create("public/robots.txt")
+            if destino != nil {
+                defer destino.Close()
+                io.Copy(destino, origen)
+            }
+        }
+        GenerateSitemap(allPosts, cfg.UserUrl, cfg.BaseURL)
+        GenerateRSS(allPosts, cfg.UserUrl, cfg.BaseURL, cfg.SiteTitle, allPosts[0].Author, cfg.Email)
+    }
+
+    copyRoute(fs, "assets", "public/assets")
+
+    // Nota: Deberías pasar isDev a BuildPosts si quieres Live Reload en los artículos individuales
+    b.BuildPosts(fs, cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl, cfg.Email)
+    
+    PagesData := map[string]any{
+        "BaseURL":      cfg.BaseURL,
+        "Title":         cfg.SiteTitle,
+        "Posts":         allPosts,
+        "ActiveLasted":  cfg.UseSectionPost.Active,
+        "ActivePinned":  cfg.UsePinned.Active,
+        "Latest":        allPosts[:limitePosts],
+        "CantPost":      strconv.Itoa(limitePosts),
+    }
+
+    for _, nombreArchivo := range paginasDetectadas {
+        if nombreArchivo == "post.html" {
+            continue 
+        }
+
+        result, err := b.BuildPage(nombreArchivo, PagesData)
+        if err != nil {
+            log.Printf("Error en %s: %v", nombreArchivo, err)
+            continue
+        }
+
+        // --- INYECCIÓN LIVE RELOAD ---
+        if isDev {
+            script := `
+        <script>
+        const ws = new WebSocket("ws://" + window.location.host + "/ws");
+        ws.onmessage = (e) => { if (e.data === "reload") window.location.reload(); };
+        </script>`
+
+            contentStr := string(result.Content)
+            
+            if strings.Contains(strings.ToLower(contentStr), "</body>") {
+                // Si existe, reemplazamos normal
+                newContent := strings.Replace(contentStr, "</body>", script+"</body>", 1)
+                result.Content = []byte(newContent)
+            } else {
+                // Si NO existe (por la minificación), lo pegamos al final
+                result.Content = append(result.Content, []byte(script)...)
+                fmt.Println("⚡ Etiqueta </body> no encontrada (posible minificación). Inyectando al final del archivo.")
+            }
+        }
+
+        err = CreateRoute(fs, RoutePublic, "", result)
+        if err != nil {
+            log.Fatal(err)
+        }
+        
+        fmt.Printf("✓ Página generada: %s\n", result.FolderName)
+    }
+
+    fmt.Println("🚀 Sitio generado con éxito")
 }
 
 // Init de templates
@@ -190,7 +325,7 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
 	m := minify.New()
     m.AddFunc("text/html", html.Minify) // Configuramos el minificador de HTML
 	
-    minified, err := m.Bytes("text/html", buf.Bytes())
+    HTMLminified, err := m.Bytes("text/html", buf.Bytes())
     if err != nil {
         // Si falla la minificación, devolvemos el HTML normal por seguridad
         return RenderResult{
@@ -202,11 +337,11 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
 	// Retorno minificado
     return RenderResult{
         FolderName: folderName,
-        Content:    minified,
+        Content:    HTMLminified,
     }, nil
 }
 
-func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool, userUrl string, emailDir string) {
+func (b *Builder) BuildPosts(fs afero.Fs,baseUrl string, allPosts []Post, active bool, userUrl string, emailDir string) {
 	
 	// 3.2 Recorrer y renderizar los posts
 	for i := range allPosts {
@@ -237,6 +372,6 @@ func (b *Builder) BuildPosts(baseUrl string, allPosts []Post, active bool, userU
 			fmt.Printf("Error renderizando post: %v\n", err)
 			continue // Salta al siguiente post si este falla
 		}
-		CreateRoute(RoutePost, RouteNamePost, PostResult)
+		CreateRoute(fs,RoutePost, RouteNamePost, PostResult)
 	}
 }

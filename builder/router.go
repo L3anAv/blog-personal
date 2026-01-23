@@ -1,8 +1,11 @@
 package builder
 
-import (          
-    "os"            
+import (         
+
     "path/filepath"
+
+    // Sistema de guardado
+    "github.com/spf13/afero"
 )
 
 type RouteType int
@@ -12,7 +15,7 @@ const (
     RoutePost                   
 )
 
-func CreateRoute(routeType RouteType, slug string, result RenderResult) error {
+func CreateRoute(fs afero.Fs,routeType RouteType, slug string, result RenderResult) error {
     var baseDir string
 
     switch routeType {
@@ -29,6 +32,10 @@ func CreateRoute(routeType RouteType, slug string, result RenderResult) error {
     }
 
     finalPath := filepath.Join(baseDir, "index.html")
-    os.MkdirAll(baseDir, 0755)
-    return os.WriteFile(finalPath, result.Content, 0644)
+
+    err := fs.MkdirAll(baseDir, 0755)
+    if err != nil {
+        return err
+    }
+    return afero.WriteFile(fs,finalPath, result.Content, 0644)
 }

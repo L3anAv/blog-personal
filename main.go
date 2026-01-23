@@ -1,133 +1,106 @@
 package main
 
 import (
-	"os"
-	"io"
 	"fmt"
 	"log"
-	"strconv"
-	"path/filepath"
-	
+	"net/http"
 	"yamblg/builder"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/gorilla/websocket"
+	"github.com/spf13/afero"
+	"github.com/spf13/cobra"
 )
 
-// Función para copiar archivos (assets, estilos, etc.)
-func copyRoute(src, dst string) error {
-	return filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		relPath, _ := filepath.Rel(src, path)
-		targetPath := filepath.Join(dst, relPath)
-		if info.IsDir() {
-			return os.MkdirAll(targetPath, info.Mode())
-		}
-		srcFile, _ := os.Open(path)
-		defer srcFile.Close()
-		dstFile, _ := os.Create(targetPath)
-		defer dstFile.Close()
-		_, err = io.Copy(dstFile, srcFile)
-		return err
-	})
-}
+var (
+	upgrader  = websocket.Upgrader{ CheckOrigin: func(r *http.Request) bool { return true } }
+	clientes  = make(map[*websocket.Conn]bool)
+	notificar = make(chan bool)
+)
 
 func main() {
+	var rootCmd = &cobra.Command{Use: "yamblg"}
 
-// Obtener datos para crear .htmls
-	cfg, err := builder.LoadConfig()
-	if err != nil {
-        log.Fatal(err)
-    }
-
-//Configuracion de yaml`s
-	err = builder.ConfigYaml()
-	if err != nil {
-        log.Fatal(err)
-    }
-
-	// Instancia
-	b := &builder.Builder{}
-	
-	// Inicializaciones
-	paginasDetectadas, err := b.InitTemplates()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-	allPosts, err := builder.LoadPosts()
-	if err != nil {
-		log.Fatalf("Error cargando posts: %v", err)
-	}
-	
-	limitePosts := min(len(allPosts), cfg.UseSectionPost.LimitOfPost)
-	
-//  Limpieza y preparación
-	os.RemoveAll("public")
-	os.MkdirAll("public", 0755)
-	os.MkdirAll("public/style", 0755)
-
-	//Copiar robots.txt
-	origen, _ := os.Open("robots.txt") 
-	defer origen.Close()
-
-	destino, _ := os.Create("public/robots.txt")
-	defer destino.Close()
-
-	io.Copy(destino, origen)
-
-	// Antes de copiar
-	copyRoute("assets", "public/assets")
-	
-	//Minificar CSS
-	builder.MinifyCSS()
-	
-	//  Procesar Posts del blog
-	b.BuildPosts(cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl, cfg.Email)
-	
-	// Crear rss y sitemap
-	builder.GenerateSitemap(allPosts,cfg.UserUrl,cfg.BaseURL)
-	builder.GenerateRSS(allPosts,cfg.UserUrl,cfg.BaseURL, cfg.SiteTitle, allPosts[0].Author, cfg.Email)
-
-//  Renderizado de .html globales
-	
-	// 4.1 Pasando data para los tmpl
-	PagesData := map[string]any{
-		"BaseURL": cfg.BaseURL,
-		"Title": cfg.SiteTitle,
-		"Posts":   allPosts,
-		"ActiveLasted": cfg.UseSectionPost.Active,
-		"ActivePinned": cfg.UsePinned.Active,
-		"Latest":  allPosts[:limitePosts],
-		"CantPost": strconv.Itoa(limitePosts),
+	var buildCmd = &cobra.Command{
+		Use:   "build",
+		Short: "Producción",
+		Run: func(cmd *cobra.Command, args []string) {
+			fs := afero.NewOsFs()
+			builder.RunBuild(fs, false)
+		},
 	}
 
-	// 4.2 Creando los .html
-	for _, nombreArchivo := range paginasDetectadas {
-        
-        // Caso especial: La plantilla de posts no se genera sola aquí
-        // porque necesita datos (la lista de artículos).
-        if nombreArchivo == "post.html" {
-            continue 
-        }
+	var serveCmd = &cobra.Command{
+		Use:   "serve",
+		Short: "Desarrollo con Live Reload",
+		Run: func(cmd *cobra.Command, args []string) {
+			memFs := afero.NewMemMapFs()
+			sourceFs := afero.NewOsFs()
 
-        // Renderizamos (usando el nombre como llave del mapa)
-        result, err := b.BuildPage(nombreArchivo, PagesData)
-        if err != nil {
-            log.Printf("Error en %s: %v", nombreArchivo, err)
-            continue
-        }
+			builder.RunBuild(memFs, true)
 
-        // Creamos la ruta en la raíz de public/
-        err = builder.CreateRoute(builder.RoutePublic, "", result)
-        if err != nil {
-            log.Fatal(err)
-        }
-        
-        fmt.Printf("✓ Página generada: %s\n", result.FolderName)
-    }
+			// Canal de comunicación para el reload
+			go func() {
+				for {
+					<-notificar
+					for c := range clientes {
+						c.WriteMessage(websocket.TextMessage, []byte("reload"))
+					}
+				}
+			}()
 
-// Logs de terminal para verificar
-	fmt.Println("🚀 Sitio generado con éxito en /public")
-	fmt.Printf("📂 Posts en: public/post/\n")
-	fmt.Printf("📄 Páginas en: public/\n")
+			go iniciarWatcher(sourceFs, memFs)
+			iniciarServidor(memFs)
+		},
+	}
+
+	rootCmd.AddCommand(buildCmd, serveCmd)
+	rootCmd.Execute()
+}
+
+func iniciarWatcher(sourceFs afero.Fs, memFs afero.Fs) {
+	watcher, _ := fsnotify.NewWatcher()
+	defer watcher.Close()
+
+	dirs := []string{"content", "pages", "layout", "styles"}
+	for _, d := range dirs { _ = watcher.Add(d) }
+
+	for {
+		select {
+		case event := <-watcher.Events:
+			if event.Op&(fsnotify.Write|fsnotify.Create|fsnotify.Remove) != 0 {
+				log.Printf("♻️  Cambio en %s. Actualizando...", event.Name)
+				builder.RunBuild(memFs, true)
+				notificar <- true
+			}
+		}
+	}
+}
+
+func iniciarServidor(memFs afero.Fs) {
+	// 1. Creamos un sub-sistema de archivos que apunte directamente a "public"
+	// Así, para el servidor, la raíz "/" será la carpeta "public" en RAM.
+	publicDir := afero.NewBasePathFs(memFs, "public")
+	httpFs := afero.NewHttpFs(publicDir)
+	fileserver := http.FileServer(httpFs.Dir("/"))
+
+	// Endpoint del WebSocket (igual que antes)
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		conn, _ := upgrader.Upgrade(w, r, nil)
+		clientes[conn] = true
+		defer func() { delete(clientes, conn); conn.Close() }()
+		for { if _, _, err := conn.ReadMessage(); err != nil { break } }
+	})
+
+	// Manejador principal
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Desactivar caché para que el Live Reload sea instantáneo
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		
+		// Servir el archivo
+		fileserver.ServeHTTP(w, r)
+	})
+
+	fmt.Println("🌍 Yamblg Dev Server: http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
