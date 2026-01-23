@@ -3,7 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"io/fs"
+	"embed"
 	"net/http"
+	"path/filepath"
 	"yamblg/builder"
 
 	"github.com/fsnotify/fsnotify"
@@ -11,6 +15,9 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
+
+//go:embed components content font layout pages style config.yaml robots.txt
+var initAssets embed.FS
 
 var (
 	upgrader  = websocket.Upgrader{ CheckOrigin: func(r *http.Request) bool { return true } }
@@ -54,7 +61,62 @@ func main() {
 		},
 	}
 
-	rootCmd.AddCommand(buildCmd, serveCmd)
+	var initCmd = &cobra.Command{
+	Use:   "init [directorio]",
+	Short: "Crea un nuevo sitio con la estructura base",
+	Args:  cobra.MaximumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		targetDir := "."
+		if len(args) > 0 {
+			targetDir = args[0]
+		}
+
+		// Creamos el directorio si no existe
+		if err := os.MkdirAll(targetDir, 0755); err != nil {
+			fmt.Printf("❌ Error al crear directorio: %v\n", err)
+			return
+		}
+
+		fmt.Printf("🏗️  Inicializando yamblg en: %s\n", targetDir)
+
+		// Recorremos el sistema de archivos embebido
+		err := fs.WalkDir(initAssets, ".", func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+
+			// "." es la raíz del embed, la saltamos
+			if path == "." {
+				return nil
+			}
+
+			// Construimos la ruta de destino
+			destPath := filepath.Join(targetDir, path)
+
+			if d.IsDir() {
+				return os.MkdirAll(destPath, 0755)
+			}
+
+			// Leemos el archivo del binario
+			data, err := initAssets.ReadFile(path)
+			if err != nil {
+				return err
+			}
+
+			// Escribimos en el disco del usuario
+			fmt.Printf("  + Creando %s...\n", path)
+			return os.WriteFile(destPath, data, 0644)
+		})
+
+		if err != nil {
+			fmt.Printf("❌ Error durante la copia: %v\n", err)
+		} else {
+			fmt.Println("✅ ¡Listo! Tu estructura base ha sido generada.")
+		}
+	},
+}
+
+	rootCmd.AddCommand(buildCmd, serveCmd,initCmd)
 	rootCmd.Execute()
 }
 
