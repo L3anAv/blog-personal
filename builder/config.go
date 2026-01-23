@@ -103,7 +103,10 @@ func MinifyCSS(fs afero.Fs) {
         EntryPoints: []string{"style/index.css"},
         Outdir:      "public/style",
         Bundle:      true,
-        Write:       false, // Sigues manejándolo tú en memoria
+        Write:       false,
+		MinifyWhitespace:  true,
+        MinifyIdentifiers: true,
+        MinifySyntax:      true,
         Loader: map[string]api.Loader{
             ".css": api.LoaderCSS,
             ".ttf": api.LoaderCopy,
@@ -115,15 +118,50 @@ func MinifyCSS(fs afero.Fs) {
         log.Fatalf("Error minificando CSS: %v", result.Errors)
     }
 
-    for _, file := range result.OutputFiles {
-        // USA file.Path en lugar de una cadena fija
-        // file.Path ya contiene "public/style/index.css" o "public/style/tu-fuente.ttf"
-        err := afero.WriteFile(fs, file.Path, file.Contents, 0644)
-        
-        if err != nil {
-            log.Printf("Error escribiendo archivo %s: %v", file.Path, err)
-        } else {
-            fmt.Println("✅ Guardado:", file.Path)
-        }
+	if len(result.OutputFiles) == 0 {
+        log.Println("⚠️ Ojo: esbuild no generó ningún archivo de salida.")
     }
+
+   for _, file := range result.OutputFiles {
+    // Intentamos limpiar la ruta absoluta
+    // Si file.Path es "C:\Users\...\public\style\index.css"
+    // Queremos que sea "public/style/index.css"
+    
+    // Obtenemos el directorio actual de trabajo
+    cwd, _ := os.Getwd()
+    
+    // Intentamos obtener la ruta relativa
+    relPath, err := filepath.Rel(cwd, file.Path)
+    if err != nil {
+        // Si falla, al menos intentamos quitar el prefijo manualmente
+        // o tomamos el nombre del archivo.
+        relPath = filepath.ToSlash(file.Path) 
+    }
+
+    // NORMALIZACIÓN CRÍTICA:
+    // 1. Convertir \ a / (Windows a Web/FS)
+    relPath = filepath.ToSlash(relPath)
+    
+    // 2. Si por algún motivo sigue teniendo "C:/", lo quitamos
+    if len(relPath) > 2 && relPath[1] == ':' {
+        // Esto quita "C:" del principio
+        relPath = relPath[3:] 
+    }
+    
+    // 3. Quitar posibles "/" iniciales para que afero no se confunda
+    relPath = strings.TrimPrefix(relPath, "/")
+
+    // Aseguramos que la carpeta exista en la memoria
+    _ = fs.MkdirAll(filepath.Dir(relPath), 0755)
+
+    // Escribimos en la memoria con la ruta LIMPIA
+    err = afero.WriteFile(fs, relPath, file.Contents, 0644)
+    
+    if err != nil {
+        log.Printf("❌ Error escribiendo: %v", err)
+    } else {
+        // ESTE PRINT DEBE MOSTRAR: "public/style/index.css"
+        fmt.Printf("✅ Guardado en memoria como: %s\n", relPath)
+    }
+}
 }

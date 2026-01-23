@@ -8,12 +8,13 @@ import (
 	"embed"
 	"net/http"
 	"path/filepath"
-	"yamblg/builder"
 
-	"github.com/fsnotify/fsnotify"
-	"github.com/gorilla/websocket"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
+	"github.com/gorilla/websocket"
+	"github.com/fsnotify/fsnotify"
+	
+	"github.com/L3anAv/Yamblg/builder"
 )
 
 //go:embed components content font layout pages style config.yaml robots.txt
@@ -140,29 +141,37 @@ func iniciarWatcher(sourceFs afero.Fs, memFs afero.Fs) {
 }
 
 func iniciarServidor(memFs afero.Fs) {
-	// 1. Creamos un sub-sistema de archivos que apunte directamente a "public"
-	// Así, para el servidor, la raíz "/" será la carpeta "public" en RAM.
-	publicDir := afero.NewBasePathFs(memFs, "public")
-	httpFs := afero.NewHttpFs(publicDir)
-	fileserver := http.FileServer(httpFs.Dir("/"))
+    publicDir := afero.NewBasePathFs(memFs, "public")
+    // Usamos el sistema de archivos de afero adaptado a la interfaz de http
+    httpFs := afero.NewHttpFs(publicDir)
+    fileserver := http.FileServer(httpFs.Dir("/"))
 
-	// Endpoint del WebSocket (igual que antes)
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		conn, _ := upgrader.Upgrade(w, r, nil)
-		clientes[conn] = true
-		defer func() { delete(clientes, conn); conn.Close() }()
-		for { if _, _, err := conn.ReadMessage(); err != nil { break } }
-	})
+    http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+        conn, _ := upgrader.Upgrade(w, r, nil)
+        clientes[conn] = true
+        defer func() { delete(clientes, conn); conn.Close() }()
+        for { if _, _, err := conn.ReadMessage(); err != nil { break } }
+    })
 
-	// Manejador principal
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Desactivar caché para que el Live Reload sea instantáneo
-		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
-		
-		// Servir el archivo
-		fileserver.ServeHTTP(w, r)
-	})
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        // 1. Limpieza de caché (Importante para desarrollo)
+        w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
 
-	fmt.Println("🌍 Yamblg Dev Server: http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+        // 2. Corregir el MIME type manualmente SOLO si el FileServer falla
+        // Pero primero, verifiquemos si el archivo existe en memFs
+        path := filepath.Clean(r.URL.Path)
+        
+        // Si pides el index.css, forzamos el Content-Type antes de servirlo
+        if filepath.Ext(path) == ".css" {
+            w.Header().Set("Content-Type", "text/css; charset=utf-8")
+        } else if filepath.Ext(path) == ".js" {
+            w.Header().Set("Content-Type", "application/javascript; charset=utf-8")
+        }
+
+        // 3. Servir el archivo
+        fileserver.ServeHTTP(w, r)
+    })
+
+    fmt.Println("🌍 Yamblg Dev Server: http://localhost:8080")
+    log.Fatal(http.ListenAndServe(":8080", nil))
 }
