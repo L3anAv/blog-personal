@@ -17,7 +17,7 @@ import (
 	"github.com/l3anav/yamblg/builder"
 )
 
-//go:embed .github assets components content font layout pages style config.yaml robots.txt
+//go:embed template
 var initAssets embed.FS
 
 var (
@@ -125,7 +125,7 @@ func iniciarWatcher(sourceFs afero.Fs, memFs afero.Fs) {
 	watcher, _ := fsnotify.NewWatcher()
 	defer watcher.Close()
 
-	dirs := []string{"content", "pages", "layout", "styles"}
+	dirs := []string{"assets","components","content", "pages", "layout", "styles"}
 	for _, d := range dirs { _ = watcher.Add(d) }
 
 	for {

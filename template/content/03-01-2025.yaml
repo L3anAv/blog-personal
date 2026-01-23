@@ -1,0 +1,22 @@
+author: Leandro Avila
+date: "03-01-2025"
+description: Primer post creado para mostrar en la demo.
+fijado: true
+title: Hola, Bienvenido a la ¡Demo de Yamblg!
+body: | 
+
+  <h3>¡Te damos la bienvenida! 🚀</h3>
+
+  <p>¡Hola! Si estás leyendo esto, estás viendo la <strong>demo oficial de Yamblg</strong>
+
+  <h3>Enlaces importantes</h3>
+
+  <p>
+    * <strong>Explora el código:</strong> <a href="https://github.com/L3anAv/Yamblg">Repositorio en GitHub</a> – Échale un vistazo al motor de renderizado y a la lógica de procesamiento de los YAMLs.<br>
+  </p>
+
+  <h3>¿Qué sigue?</h3>
+
+  <p>Este es solo el comienzo. Ahora construye tu blog rápidamente,<br /> ¡A construir!</p>
+
+  <p>¡Gracias por usar y formar parte!</p>

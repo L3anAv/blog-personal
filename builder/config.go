@@ -159,9 +159,6 @@ func MinifyCSS(fs afero.Fs) {
     
     if err != nil {
         log.Printf("❌ Error escribiendo: %v", err)
-    } else {
-        // ESTE PRINT DEBE MOSTRAR: "public/style/index.css"
-        fmt.Printf("✅ Guardado en memoria como: %s\n", relPath)
     }
 }
 }

@@ -117,7 +117,7 @@ func RunBuild(fs afero.Fs, isDev bool) {
     copyRoute(fs, "assets", "public/assets")
 
     // Nota: Deberías pasar isDev a BuildPosts si quieres Live Reload en los artículos individuales
-    b.BuildPosts(fs, cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl, cfg.Email)
+    b.BuildPosts(isDev,fs, cfg.BaseURL, allPosts, cfg.UsePinned.Active, cfg.UserUrl, cfg.Email)
     
     PagesData := map[string]any{
         "BaseURL":      cfg.BaseURL,
@@ -157,7 +157,6 @@ func RunBuild(fs afero.Fs, isDev bool) {
             } else {
                 // Si NO existe (por la minificación), lo pegamos al final
                 result.Content = append(result.Content, []byte(script)...)
-                fmt.Println("⚡ Etiqueta </body> no encontrada (posible minificación). Inyectando al final del archivo.")
             }
         }
 
@@ -341,7 +340,7 @@ func (b *Builder) BuildPage(contentTemplate string, data any) (RenderResult, err
     }, nil
 }
 
-func (b *Builder) BuildPosts(fs afero.Fs,baseUrl string, allPosts []Post, active bool, userUrl string, emailDir string) {
+func (b *Builder) BuildPosts(isDev bool,fs afero.Fs,baseUrl string, allPosts []Post, active bool, userUrl string, emailDir string) {
 	
 	// 3.2 Recorrer y renderizar los posts
 	for i := range allPosts {
@@ -372,6 +371,27 @@ func (b *Builder) BuildPosts(fs afero.Fs,baseUrl string, allPosts []Post, active
 			fmt.Printf("Error renderizando post: %v\n", err)
 			continue // Salta al siguiente post si este falla
 		}
+
+        if isDev {
+            script := `
+        <script>
+        const ws = new WebSocket("ws://" + window.location.host + "/ws");
+        ws.onmessage = (e) => { if (e.data === "reload") window.location.reload(); };
+        </script>`
+
+            contentStr := string(PostResult.Content)
+            
+            if strings.Contains(strings.ToLower(contentStr), "</body>") {
+                // Si existe, reemplazamos normal
+                newContent := strings.Replace(contentStr, "</body>", script+"</body>", 1)
+                PostResult.Content = []byte(newContent)
+            } else {
+                // Si NO existe (por la minificación), lo pegamos al final
+                PostResult.Content = append(PostResult.Content, []byte(script)...)
+            }
+        }
+
 		CreateRoute(fs,RoutePost, RouteNamePost, PostResult)
+        fmt.Printf("✓ Página generada: %s\n", RouteNamePost)
 	}
 }

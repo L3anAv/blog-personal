@@ -1,0 +1,11 @@
+# Config
+baseUrl: "/Yamblg/"
+userUrl: "https://l3anav.github.io"
+email: "leandroav.dev@gmail.com"
+siteTitle: "Yamblg | Crea tu blog rápidamente"
+useSectionPost:
+    active: true
+    limitOfPost: 5
+usePinned:
+    active: true
+    
