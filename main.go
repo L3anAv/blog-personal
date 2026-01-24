@@ -125,7 +125,7 @@ func iniciarWatcher(sourceFs afero.Fs, memFs afero.Fs) {
 	watcher, _ := fsnotify.NewWatcher()
 	defer watcher.Close()
 
-	dirs := []string{"assets","components","content", "pages", "layout", "styles"}
+	dirs := []string{"assets","components","content", "pages", "layout", "style"}
 	for _, d := range dirs { _ = watcher.Add(d) }
 
 	for {

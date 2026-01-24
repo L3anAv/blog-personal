@@ -5,3 +5,13 @@
         font-style: normal;
         font-display: swap;
 }
+
+@font-face {
+        font-family: 'Sans';
+        src: url('../font/PublicSans.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+}
+
+

@@ -1,11 +1,15 @@
 {{define "mainContent"}}
 {{if .ActiveLasted}}
+<section class="texto-central">
+    <div><p>v1.0.0</p></div>
+    <h2>El generador de blog <br/><span>que estabas buscando.</span></h2>
+</section>
 <section class="ultimos-posts">
   
-        <p>Últimos {{ .CantPost }} posteos</p>
+        <p>📄 YAMBLG/POSTS/LATEST {{ .CantPost }}</p>
         <ul>
             {{ range .Latest }}
-                    <li><a href="{{ $.BaseURL }}{{ .Link }}">{{ .Title }}</a></li>
+                    <li><span>{{ if .Fijado }}★{{else}} ◆ {{ end }}</span><a href="{{ $.BaseURL }}{{ .Link }}">{{ .Title }}</a>{{ .Date }}</li>
             {{ end }}
         </ul>
             <a href="{{ $.BaseURL }}lista-de-posteos">Ver todos los posteos</a>
@@ -17,32 +21,34 @@
     {{ if $.ActivePinned }}
         {{ if .Fijado }}
             <li>
-                <p>📌</p>
+                <p class="lista-post-destacado">★ Entrada Destacada</p>
                 <a href="{{ $.BaseURL }}{{ .Link }}">
                     <p>{{ .Title }}</p>
                 </a>
                 <p>{{ .Description }}</p>
                 <a href="{{ $.BaseURL }}{{ .Link }}">
-                    <button> Leer -></button>
+                    <button> Leer ➜</button>
                 </a>
-                <small style="display: block; background:#d3d2d0; padding:3px; text-align: center; margin-top: 12px; font-size: 13px; color: #666;">
-                    {{ .Author }} el {{ .Date }}
-                </small>
+                <div class="meta-info">
+                    <span>Escrito por {{ .Author }}</span>
+                    <span>Publicado el {{ .Date }}</span>
+                </div>
             </li>
         {{ end }}
     {{ else }}
         <li>
             <a href="{{ $.BaseURL }}{{ .Link }}">
-                <p>{{ .Title }}</p>
-            </a>
-            <p>{{ .Description }}</p>
-            <a href="{{ $.BaseURL }}{{ .Link }}">
-                <button> Leer -></button>
-            </a>
-            <small style="display: block; background:#d3d2d0; padding:3px; text-align: center; margin-top: 12px; font-size: 13px; color: #666;">
-                {{ .Author }} el {{ .Date }}
-            </small>
-        </li>
+                    <p>{{ .Title }}</p>
+                </a>
+                <p class="description">{{ .Description }}</p>
+                <a href="{{ $.BaseURL }}{{ .Link }}">
+                    <button> Leer ➜</button>
+                </a>
+                <div class="meta-info">
+                    <span>Escrito por {{ .Author }}</span>
+                    <span>Publicado el {{ .Date }}</span>
+                </div>
+            </li>
     {{ end }}
 {{ end }}
     </ul>

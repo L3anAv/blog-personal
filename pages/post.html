@@ -7,7 +7,7 @@
     <header>
       <h1 class="post-title">{{ .Post.Title }}</h1>
       <p class="post-meta">
-        <em>Publicado por <strong>{{ .Post.Author }}</strong> • {{ .Post.Date }}</em>
+         <em><span>{{ if .Post.Fijado }} ★ Entrada Destacada - {{ end }}</span><strong>{{ .Post.Author }}</strong> - {{ .Post.Date }}</em>
       </p>
     </header>
 
